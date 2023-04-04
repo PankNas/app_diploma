@@ -28,5 +28,5 @@ app.get('/auth/me', checkAuth, UserController.getMe);
 app.get('/courses', CourseController.getAll);
 app.get('/courses/:id', CourseController.getOne);
 app.post('/courses', checkAuth, courseCreateValidation, CourseController.create);
-// app.delete('/courses', checkAuth, CourseController.remove);
-// app.patch('/courses', checkAuth, CourseController.update);
+app.delete('/courses/:id', checkAuth, CourseController.remove);
+app.patch('/courses/:id', checkAuth, CourseController.update);

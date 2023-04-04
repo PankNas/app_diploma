@@ -25,9 +25,7 @@ export const getOne = async (req, res) => {
 
         res.json(doc);
       })
-      .catch(err => {
-        throwError(res, err, 500, 'Не удалось вернуть курс')
-      });
+      .catch(err => throwError(res, '', 500, 'Не удалось вернуть курс'));
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить курс');
   }
@@ -48,5 +46,42 @@ export const create = async (req, res) => {
     res.json(course);
   } catch (err) {
     throwError(res, err, 500, 'Не удалось создать курс');
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    CourseModel.findOneAndDelete({_id: courseId})
+      .then(doc => {
+        if (!doc) return throwError(res, '', 500, 'Не удалось удалить курс');
+
+        res.json({success: true});
+      })
+      .catch(err => throwError(res, '', 500, 'Не удалось удалить курс'));
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось получить курс');
+  }
+};
+
+export const update = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    await CourseModel.updateOne(
+      {_id: courseId},
+      {
+        title: req.body.title,
+        description: req.body.description,
+        imageUrl: req.body.imageUrl,
+        tags: req.body.tags,
+        user: req.userId,
+        }
+    );
+
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить статью');
   }
 };
