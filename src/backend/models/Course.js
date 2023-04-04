@@ -8,7 +8,6 @@ const CourseSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-    unique: true,
   },
   tags: {
     type: Array,
@@ -29,4 +28,4 @@ const CourseSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-export default mongoose.model('User', CourseSchema);
+export default mongoose.model('Course', CourseSchema);

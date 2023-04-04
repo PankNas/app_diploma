@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import UserModel from "../models/User.js";
+import {throwError} from "../utils/error.js";
 
 export const register = async (request, response) => {
   try {
@@ -37,11 +38,7 @@ export const register = async (request, response) => {
       token,
     });
   } catch (err) {
-    console.log(err);
-
-    response.status(500).json({
-      message: 'Не удалось зарегестрироваться',
-    });
+    throwError(response, err, 500, 'Не удалось зарегестрироваться');
   }
 };
 
@@ -49,18 +46,19 @@ export const login = async (req, res) => {
   try {
     const user = await UserModel.findOne({email: req.body.email});
 
-    if (!user) {
-      return res.status(404).json({
-        // переделать в будущем
-        massage: 'Пользователь не найден',
-      });
-    }
+    if (!user)
+      return throwError(res, '', 404, 'Неверный логин или пароль');
+    // if (!user) {
+    //   return res.status(404).json({massage: 'Неверный логин или пароль'});
+    // }
 
     const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
-    if (!isValidPass) {
-      return res.status(400).json({message: 'Неверный логин или пароль'});
-    }
+    if (!isValidPass)
+      return throwError(res, '', 400, 'Неверный логин или пароль');
+    // if (!isValidPass) {
+    //   return res.status(400).json({message: 'Неверный логин или пароль'});
+    // }
 
     const token = jwt.sign(
       {_id: user._id,},
@@ -75,11 +73,7 @@ export const login = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.log(err);
-
-    res.status(500).json({
-      message: 'Не удалось авторизоваться',
-    });
+    throwError(res, err, 500, 'Не удалось авторизоваться');
   }
 };
 
@@ -87,18 +81,16 @@ export const getMe = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId);
 
-    if (!user) {
-      return res.status(404).json({message: 'Пользователь не найден'});
-    }
+    if (!user)
+      return throwError(res, '', 404, 'Пользователь не найден');
+    // if (!user) {
+    //   return res.status(404).json({message: 'Пользователь не найден'});
+    // }
 
     const {passwordHash, ...userData} = user._doc;
 
     res.json(userData);
   } catch (err) {
-    console.log(err);
-
-    res.status(500).json({
-      message: 'Нет доступа',
-    });
+    throwError(res, err, 500, 'Нет доступа');
   }
 };
