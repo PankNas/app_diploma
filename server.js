@@ -1,13 +1,26 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import multer from 'multer';
 
 import {registerValidation, loginValidation, courseCreateValidation} from "./src/backend/validations.js";
 import checkAuth from "./src/backend/utils/checkAuth.js";
 
 import * as UserController from "./src/backend/controllers/UserController.js";
 import * as CourseController from "./src/backend/controllers/CourseController.js";
+import handleValidationError from "./src/backend/utils/handleValidationError.js";
 
 const app = express();
+
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, 'src/backend/uploads');
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({storage});
 
 mongoose.connect('mongodb://0.0.0.0:27017/app_diploma')
   .then(() => {
@@ -20,13 +33,26 @@ mongoose.connect('mongodb://0.0.0.0:27017/app_diploma')
   .catch(err => console.log(`DB connection error: ${err}`));
 
 app.use(express.json());
+app.use('/uploads', express.static('src/backend/uploads'));
 
-app.post('/auth/register', registerValidation, UserController.register);
-app.post('/auth/login', loginValidation, UserController.login);
+app.post('/auth/register', registerValidation, handleValidationError, UserController.register);
+app.post('/auth/login', loginValidation, handleValidationError, UserController.login);
 app.get('/auth/me', checkAuth, UserController.getMe);
+
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+  res.json({
+    url: `/src/backend/uploads/${req.file.originalname}`,
+  });
+});
 
 app.get('/courses', CourseController.getAll);
 app.get('/courses/:id', CourseController.getOne);
-app.post('/courses', checkAuth, courseCreateValidation, CourseController.create);
+app.post('/courses', checkAuth, courseCreateValidation, handleValidationError, CourseController.create);
 app.delete('/courses/:id', checkAuth, CourseController.remove);
-app.patch('/courses/:id', checkAuth, CourseController.update);
+app.patch(
+  '/courses/:id',
+  checkAuth,
+  courseCreateValidation,
+  handleValidationError,
+  CourseController.update
+);

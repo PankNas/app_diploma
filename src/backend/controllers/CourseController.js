@@ -1,5 +1,5 @@
 import CourseModel from "../models/Course.js";
-import {throwError} from "../utils/error.js";
+import {throwError} from "../utils/throwError.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -25,7 +25,7 @@ export const getOne = async (req, res) => {
 
         res.json(doc);
       })
-      .catch(err => throwError(res, '', 500, 'Не удалось вернуть курс'));
+      .catch(_ => throwError(res, '', 500, 'Не удалось вернуть курс'));
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить курс');
   }
@@ -59,7 +59,7 @@ export const remove = async (req, res) => {
 
         res.json({success: true});
       })
-      .catch(err => throwError(res, '', 500, 'Не удалось удалить курс'));
+      .catch(_ => throwError(res, '', 500, 'Не удалось удалить курс'));
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить курс');
   }
