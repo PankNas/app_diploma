@@ -3,11 +3,8 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 
 import {registerValidation, loginValidation, courseCreateValidation} from "./src/backend/validations.js";
-import checkAuth from "./src/backend/utils/checkAuth.js";
-
-import * as UserController from "./src/backend/controllers/UserController.js";
-import * as CourseController from "./src/backend/controllers/CourseController.js";
-import handleValidationError from "./src/backend/utils/handleValidationError.js";
+import {checkAuth, handleValidationError} from "./src/backend/utils/index.js";
+import {UserController, CourseController} from './src/backend/controllers/index.js';
 
 const app = express();
 
