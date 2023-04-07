@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
+import cors from 'cors';
 
-import {registerValidation, loginValidation, courseCreateValidation} from "./src/backend/validations.js";
-import {checkAuth, handleValidationError} from "./src/backend/utils/index.js";
-import {UserController, CourseController} from './src/backend/controllers/index.js';
+import {registerValidation, loginValidation, courseCreateValidation} from "./src/validations.js";
+import {checkAuth, handleValidationError} from "./src/utils/index.js";
+import {UserController, CourseController} from './src/controllers/index.js';
 
 const app = express();
 
@@ -31,6 +32,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/app_diploma')
 
 app.use(express.json());
 app.use('/uploads', express.static('src/backend/uploads'));
+app.use(cors());
 
 app.post('/auth/register', registerValidation, handleValidationError, UserController.register);
 app.post('/auth/login', loginValidation, handleValidationError, UserController.login);
