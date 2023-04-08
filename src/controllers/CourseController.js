@@ -1,6 +1,18 @@
 import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 
+export const getLastTags = async (req, res) => {
+  try {
+    const courses = await CourseModel.find().limit(5).exec();
+
+    const tags = courses.flatMap(obj => obj.tags).slice(0, 5);
+
+    res.json(tags);
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось получить курсы');
+  }
+};
+
 export const getAll = async (req, res) => {
   try {
     const courses = await CourseModel.find().populate('user').exec();

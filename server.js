@@ -44,6 +44,8 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   });
 });
 
+app.get('/tags', CourseController.getLastTags);
+
 app.get('/courses', CourseController.getAll);
 app.get('/courses/:id', CourseController.getOne);
 app.post('/courses', checkAuth, courseCreateValidation, handleValidationError, CourseController.create);
