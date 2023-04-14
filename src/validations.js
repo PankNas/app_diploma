@@ -15,6 +15,6 @@ export const loginValidation = [
 export const courseCreateValidation = [
   body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
   body('description', 'Введите описание курса').isLength({min: 5}).isString(),
-  body('tags', 'Неверный формат тэгов (укажите массив)').optional().isString(),
+  body('tags', 'Неверный формат тэгов').optional().isString(),
   body('imageUrl', 'Неверный url изображения').optional().isString(),
 ];
