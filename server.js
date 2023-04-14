@@ -11,7 +11,7 @@ const app = express();
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    cb(null, 'src/backend/uploads');
+    cb(null, 'src/uploads');
   },
   filename: (_, file, cb) => {
     cb(null, file.originalname);
@@ -31,7 +31,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/app_diploma')
   .catch(err => console.log(`DB connection error: ${err}`));
 
 app.use(express.json());
-app.use('/uploads', express.static('src/backend/uploads'));
+app.use('/uploads', express.static('src/uploads'));
 app.use(cors());
 
 app.post('/auth/register', registerValidation, handleValidationError, UserController.register);
@@ -40,7 +40,7 @@ app.get('/auth/me', checkAuth, UserController.getMe);
 
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   res.json({
-    url: `/src/backend/uploads/${req.file.originalname}`,
+    url: `/src/uploads/${req.file.originalname}`,
   });
 });
 

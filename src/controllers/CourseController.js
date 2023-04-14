@@ -32,12 +32,13 @@ export const getOne = async (req, res) => {
       {$inc: {viewsCount: 1}},
       {returnDocument: 'after'}
     )
+      .populate('user')
       .then(doc => {
         if (!doc) return throwError(res, '', 404, 'Статья не найдена');
 
         res.json(doc);
       })
-      .catch(_ => throwError(res, '', 500, 'Не удалось вернуть курс'));
+      .catch(_ => throwError(res, '', 500, 'Не удалось вернуть курс'))
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить курс');
   }
