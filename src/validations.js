@@ -12,9 +12,16 @@ export const loginValidation = [
   body('password', 'Пароль должен быть минимум 5 символов').isLength({min: 5}),
 ];
 
-export const courseCreateValidation = [
+export const courseValidation = [
+  body('title', 'Введите заголовок курса').optional().isLength({min: 3}).isString(),
+  body('desc', 'Введите описание курса').optional().isLength({min: 5}).isString(),
+  body('imageUrl', 'Неверный url изображения').optional().optional().isString(),
+  body('language', 'Не определен язык').optional().isString(),
+  body('levelLanguage', 'Не определен уровень языка').optional().isString(),
+];
+
+export const videoLessonValidation = [
   body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
-  body('description', 'Введите описание курса').isLength({min: 5}).isString(),
-  body('tags', 'Неверный формат тэгов').optional().isString(),
-  body('imageUrl', 'Неверный url изображения').optional().isString(),
+  body('desc', 'Введите описание курса').optional().isLength({min: 5}).isString(),
+  body('videoUrl', 'Неверный url изображения').isString(),
 ];

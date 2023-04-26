@@ -3,19 +3,23 @@ import mongoose from "mongoose";
 const CourseSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    sparse:true
+    // required: true,
   },
-  description: {
+  desc: {
     type: String,
-    required: true,
+    sparse:true
+    // required: true,
   },
-  tags: {
-    type: Array,
-    default: [],
+  language: {
+    type: String,
+    sparse:true
+    // required: true,
   },
-  viewsCount: {
-    type: Number,
-    default: 0,
+  levelLanguage: {
+    type: String,
+    sparse:true
+    // required: true,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

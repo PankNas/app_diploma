@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 import cors from 'cors';
 
-import {registerValidation, loginValidation, courseCreateValidation} from "./src/validations.js";
+import * as valid from "./src/validations.js";
 import {checkAuth, handleValidationError} from "./src/utils/index.js";
-import {UserController, CourseController} from './src/controllers/index.js';
+import * as control from './src/controllers/index.js';
 
 const app = express();
 
@@ -34,26 +34,39 @@ app.use(express.json());
 app.use('/uploads', express.static('src/uploads'));
 app.use(cors());
 
-app.post('/auth/register', registerValidation, handleValidationError, UserController.register);
-app.post('/auth/login', loginValidation, handleValidationError, UserController.login);
-app.get('/auth/me', checkAuth, UserController.getMe);
+app.post('/auth/register', valid.registerValidation, handleValidationError, control.UserController.register);
+app.post('/auth/login', valid.loginValidation, handleValidationError, control.UserController.login);
+app.get('/auth/me', checkAuth, control.UserController.getMe);
 
-app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
   res.json({
     url: `/src/uploads/${req.file.originalname}`,
   });
 });
 
-app.get('/tags', CourseController.getLastTags);
-
-app.get('/courses', CourseController.getAll);
-app.get('/courses/:id', CourseController.getOne);
-app.post('/courses', checkAuth, courseCreateValidation, handleValidationError, CourseController.create);
-app.delete('/courses/:id', checkAuth, CourseController.remove);
+app.get('/courses', control.CourseController.getAll);
+app.get('/courses/:id', control.CourseController.getOne);
+app.post('/courses', checkAuth, valid.courseValidation, handleValidationError, control.CourseController.create);
+app.delete('/courses/:id', checkAuth, control.CourseController.remove);
 app.patch(
   '/courses/:id',
   checkAuth,
-  courseCreateValidation,
+  valid.courseValidation,
   handleValidationError,
-  CourseController.update
+  control.CourseController.update
+);
+
+app.post(
+  '/lessons/video',
+  checkAuth,
+  valid.videoLessonValidation,
+  handleValidationError,
+  control.VideoLessonController.create);
+app.delete('/lesson/video/:id', checkAuth, control.VideoLessonController.remove);
+app.patch(
+  '/lesson/video/:id',
+  checkAuth,
+  valid.videoLessonValidation,
+  handleValidationError,
+  control.VideoLessonController.update
 );

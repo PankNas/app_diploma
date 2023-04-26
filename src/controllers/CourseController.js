@@ -1,18 +1,6 @@
 import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 
-export const getLastTags = async (req, res) => {
-  try {
-    const courses = await CourseModel.find().limit(5).exec();
-
-    const tags = courses.flatMap(obj => obj.tags).slice(0, 5);
-
-    res.json(tags);
-  } catch (err) {
-    throwError(res, err, 500, 'Не удалось получить курсы');
-  }
-};
-
 export const getAll = async (req, res) => {
   try {
     const courses = await CourseModel.find().populate('user').exec();
@@ -29,16 +17,16 @@ export const getOne = async (req, res) => {
 
     CourseModel.findOneAndUpdate(
       {_id: courseId},
-      {$inc: {viewsCount: 1}},
+      // {$inc: {viewsCount: 1}},
       {returnDocument: 'after'}
     )
       .populate('user')
       .then(doc => {
-        if (!doc) return throwError(res, '', 404, 'Статья не найдена');
+        if (!doc) return throwError(res, '', 404, 'Курс не найден!');
 
         res.json(doc);
       })
-      .catch(_ => throwError(res, '', 500, 'Не удалось вернуть курс'))
+      .catch(_ => throwError(res, '', 500, 'Не удалось вернуть курс'));
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить курс');
   }
@@ -47,14 +35,17 @@ export const getOne = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const doc = new CourseModel({
-      title: req.body.title,
-      description: req.body.description,
-      imageUrl: req.body.imageUrl,
-      tags: req.body.tags.split(','),
+      title: req.body?.title,
+      desc: req.body?.desc,
+      imageUrl: req.body?.imageUrl,
+      language: req.body?.language,
+      levelLanguage: req.body?.levelLanguage,
       user: req.userId,
     });
 
     const course = await doc.save();
+
+    req.courseId = course._id;
 
     res.json(course);
   } catch (err) {
@@ -86,15 +77,16 @@ export const update = async (req, res) => {
       {_id: courseId},
       {
         title: req.body.title,
-        description: req.body.description,
+        desc: req.body.desc,
         imageUrl: req.body.imageUrl,
-        tags: req.body.tags.split(','),
+        language: req.body.language,
+        levelLanguage: req.body.levelLanguage,
         user: req.userId,
-        }
+      }
     );
 
     res.json({success: true});
   } catch (err) {
-    throwError(res, err, 500, 'Не удалось обновить статью');
+    throwError(res, err, 500, 'Не удалось обновить курс');
   }
 };
