@@ -29,9 +29,9 @@ const CourseSchema = new mongoose.Schema({
     required: true,
   },
   lessons: [{
-    // type: mongoose.Schema.Types.ObjectId,
-    // ref: 'VideoLesson',
-    // sparse:true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'VideoLesson',
+    sparse:true
   }],
 
 }, {

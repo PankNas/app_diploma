@@ -31,7 +31,7 @@ export const register = async (request, response) => {
       token,
     });
   } catch (err) {
-    throwError(response, err, 500, 'Не удалось зарегестрироваться');
+    throwError(response, err, 500, 'Не удалось зарегистрироваться');
   }
 };
 
@@ -66,7 +66,7 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.userId);
+    const user = await UserModel.findById(req.userId).populate('teachCourses');
 
     if (!user)
       return throwError(res, '', 404, 'Пользователь не найден');

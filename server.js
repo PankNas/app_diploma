@@ -44,8 +44,8 @@ app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
   });
 });
 
-app.get('/courses', control.CourseController.getAll);
-app.get('/courses/:id', control.CourseController.getOne);
+app.get('/courses', checkAuth, control.CourseController.getAll);
+app.get('/courses/:id', checkAuth, control.CourseController.getOne);
 app.post('/courses', checkAuth, valid.courseValidation, handleValidationError, control.CourseController.create);
 app.delete('/courses/:id', checkAuth, control.CourseController.remove);
 app.patch(
@@ -56,15 +56,16 @@ app.patch(
   control.CourseController.update
 );
 
+app.get('/lessons/video/:id', checkAuth, control.VideoLessonController.getOne);
 app.post(
   '/lessons/video',
   checkAuth,
   valid.videoLessonValidation,
   handleValidationError,
   control.VideoLessonController.create);
-app.delete('/lesson/video/:id', checkAuth, control.VideoLessonController.remove);
+app.delete('/lessons/video/:id', checkAuth, control.VideoLessonController.remove);
 app.patch(
-  '/lesson/video/:id',
+  '/lessons/video/:id',
   checkAuth,
   valid.videoLessonValidation,
   handleValidationError,

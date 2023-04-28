@@ -16,6 +16,12 @@ const UserSchema = new mongoose.Schema({
   },
   avatarUrl: String,
 
+  teachCourses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+    sparse: true
+  }],
+
 }, {
   timestamps: true,
 });

@@ -1,5 +1,7 @@
 import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
+import VideoLessonModel from "../models/VideoLesson.js";
+import UserModel from "../models/User.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -21,12 +23,13 @@ export const getOne = async (req, res) => {
       {returnDocument: 'after'}
     )
       .populate('user')
+      .populate('lessons')
       .then(doc => {
         if (!doc) return throwError(res, '', 404, 'Курс не найден!');
 
         res.json(doc);
       })
-      .catch(_ => throwError(res, '', 500, 'Не удалось вернуть курс'));
+      .catch(err => throwError(res, err, 500, 'Не удалось вернуть курс'));
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить курс');
   }
@@ -45,7 +48,11 @@ export const create = async (req, res) => {
 
     const course = await doc.save();
 
-    // req.courseId = course._id; // возможно убрать надо
+    // const videoLesson = await VideoLessonModel.findById(doc._id).populate('course');
+
+    let user = await UserModel.findById(req.userId).populate('teachCourses');
+    user.teachCourses.push(course);
+    await user.save();
 
     res.json(course);
   } catch (err) {
