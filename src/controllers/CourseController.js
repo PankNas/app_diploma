@@ -45,7 +45,7 @@ export const create = async (req, res) => {
 
     const course = await doc.save();
 
-    req.courseId = course._id;
+    // req.courseId = course._id; // возможно убрать надо
 
     res.json(course);
   } catch (err) {

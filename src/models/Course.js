@@ -21,12 +21,18 @@ const CourseSchema = new mongoose.Schema({
     sparse:true
     // required: true,
   },
+  imageUrl: String,
+
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  imageUrl: String,
+  lessons: [{
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: 'VideoLesson',
+    // sparse:true
+  }],
 
 }, {
   timestamps: true,

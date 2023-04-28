@@ -1,4 +1,5 @@
 import VideoLessonModel from "../models/VideoLesson.js";
+import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 
 // export const getAll = async (req, res) => {
@@ -38,14 +39,18 @@ export const create = async (req, res) => {
       title: req.body.title,
       desc: req.body.desc,
       videoUrl: req.body.videoUrl,
-      course: req.body.courseId,
+      course: req.body.course,
     });
 
     await doc.save();
 
-    const lesson = await VideoLessonModel.findById(doc._id).populate('course');
+    const videoLesson = await VideoLessonModel.findById(doc._id).populate('course');
 
-    res.json(lesson);
+    let course = await CourseModel.findById(req.body.course).populate('lessons')
+    course.lessons.push(videoLesson);
+    await course.save();
+
+    res.json(videoLesson);
   } catch (err) {
     throwError(res, err, 500, 'Не удалось создать видеоурок');
   }
