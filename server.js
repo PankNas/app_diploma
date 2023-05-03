@@ -56,18 +56,34 @@ app.patch(
   control.CourseController.update
 );
 
-app.get('/lessons/video/:id', checkAuth, control.VideoLessonController.getOne);
+// lessons
+app.delete('/lessons/:id', checkAuth, control.LessonController.remove);
+app.get('/lessons/:id', checkAuth, control.LessonController.getOne);
+
 app.post(
   '/lessons/video',
   checkAuth,
   valid.videoLessonValidation,
   handleValidationError,
   control.VideoLessonController.create);
-app.delete('/lessons/video/:id', checkAuth, control.VideoLessonController.remove);
 app.patch(
   '/lessons/video/:id',
   checkAuth,
   valid.videoLessonValidation,
   handleValidationError,
   control.VideoLessonController.update
+);
+
+app.post(
+  '/lessons/text',
+  checkAuth,
+  valid.textLessonValidation,
+  handleValidationError,
+  control.TextLessonController.create);
+app.patch(
+  '/lessons/text/:id',
+  checkAuth,
+  valid.textLessonValidation,
+  handleValidationError,
+  control.TextLessonController.update
 );

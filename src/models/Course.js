@@ -3,23 +3,19 @@ import mongoose from "mongoose";
 const CourseSchema = new mongoose.Schema({
   title: {
     type: String,
-    sparse:true
-    // required: true,
+    sparse: true
   },
   desc: {
     type: String,
-    sparse:true
-    // required: true,
+    sparse: true
   },
   language: {
     type: String,
-    sparse:true
-    // required: true,
+    sparse: true
   },
   levelLanguage: {
     type: String,
-    sparse:true
-    // required: true,
+    sparse: true
   },
   imageUrl: String,
 
@@ -30,8 +26,8 @@ const CourseSchema = new mongoose.Schema({
   },
   lessons: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'VideoLesson',
-    sparse:true
+    ref: 'Lesson',
+    sparse: true
   }],
 
 }, {

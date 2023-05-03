@@ -22,6 +22,11 @@ export const courseValidation = [
 
 export const videoLessonValidation = [
   body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
-  body('desc', 'Введите описание курса').optional().isLength({min: 5}).isString(),
+  body('desc', 'Введите описание курса').optional().isString(),
   body('videoUrl', 'Неверный url изображения').isString(),
+];
+
+export const textLessonValidation = [
+  body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
+  body('desc', 'Введите описание курса').isLength({min: 5}).isString(),
 ];

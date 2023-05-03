@@ -1,6 +1,5 @@
 import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
-import VideoLessonModel from "../models/VideoLesson.js";
 import UserModel from "../models/User.js";
 
 export const getAll = async (req, res) => {
@@ -22,8 +21,7 @@ export const getOne = async (req, res) => {
       // {$inc: {viewsCount: 1}},
       {returnDocument: 'after'}
     )
-      .populate('user')
-      .populate('lessons')
+      .populate('user lessons')
       .then(doc => {
         if (!doc) return throwError(res, '', 404, 'Курс не найден!');
 

@@ -1,27 +1,14 @@
 import mongoose from "mongoose";
+import Lesson from "./Lesson.js";
 
 const VideoLessonSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    required: true
-  },
-  title: {
-    type: String,
-    required: true
-  },
   desc: String,
-  course: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-    required: true
-  },
   videoUrl: {
     type: String,
     required: true
   },
-
 }, {
   timestamps: true
 });
 
-export default mongoose.model('VideoLesson', VideoLessonSchema);
+export default Lesson.discriminator('VideoLesson', VideoLessonSchema);
