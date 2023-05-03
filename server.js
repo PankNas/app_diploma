@@ -87,3 +87,17 @@ app.patch(
   handleValidationError,
   control.TextLessonController.update
 );
+
+app.post(
+  '/lessons/sentence',
+  checkAuth,
+  valid.sentenceLessonValidation,
+  handleValidationError,
+  control.SentenceLessonController.create);
+app.patch(
+  '/lessons/sentence/:id',
+  checkAuth,
+  valid.sentenceLessonValidation,
+  handleValidationError,
+  control.SentenceLessonController.update
+);

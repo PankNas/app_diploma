@@ -30,3 +30,8 @@ export const textLessonValidation = [
   body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
   body('desc', 'Введите описание курса').isLength({min: 5}).isString(),
 ];
+
+export const sentenceLessonValidation = [
+  body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
+  body('sentence', 'Введите предложение для урока').isLength({min: 5}).isString(),
+];
