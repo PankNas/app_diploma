@@ -33,5 +33,11 @@ export const textLessonValidation = [
 
 export const sentenceLessonValidation = [
   body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
+  body('sentence', 'Введите текст').isLength({min: 5}).isString(),
+  body('translate', 'Введите перевод текста').isLength({min: 5}).isString(),
+];
+
+export const passesLessonValidation = [
+  body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
   body('sentence', 'Введите предложение для урока').isLength({min: 5}).isString(),
 ];

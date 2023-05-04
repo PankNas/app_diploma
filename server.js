@@ -101,3 +101,17 @@ app.patch(
   handleValidationError,
   control.SentenceLessonController.update
 );
+
+app.post(
+  '/lessons/passes',
+  checkAuth,
+  valid.passesLessonValidation,
+  handleValidationError,
+  control.PassesLessonController.create);
+app.patch(
+  '/lessons/passes/:id',
+  checkAuth,
+  valid.passesLessonValidation,
+  handleValidationError,
+  control.PassesLessonController.update
+);
