@@ -6,3 +6,5 @@ export * as VideoLessonController from './VideoLessonController.js';
 export * as TextLessonController from './TextLessonController.js';
 export * as SentenceLessonController from './SentenceLessonController.js';
 export * as PassesLessonController from './PassesLessonController.js';
+export * as TestLessonController from './TestLessonController.js';
+export * as ItemTestController from './ItemTestController.js';

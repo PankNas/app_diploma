@@ -57,8 +57,8 @@ app.patch(
 );
 
 // lessons
-app.delete('/lessons/:id', checkAuth, control.LessonController.remove);
 app.get('/lessons/:id', checkAuth, control.LessonController.getOne);
+app.delete('/lessons/:id', checkAuth, control.LessonController.remove);
 
 app.post(
   '/lessons/video',
@@ -115,3 +115,19 @@ app.patch(
   handleValidationError,
   control.PassesLessonController.update
 );
+
+app.post(
+  '/lessons/test',
+  checkAuth,
+  // valid.passesLessonValidation,
+  handleValidationError,
+  control.PassesLessonController.create);
+
+// test item
+app.get('/lessons/test/item/:id', checkAuth, control.ItemTestController.getOne);
+app.post(
+  '/lessons/test/item',
+  checkAuth,
+  // valid.videoLessonValidation,
+  handleValidationError,
+  control.ItemTestController.create);
