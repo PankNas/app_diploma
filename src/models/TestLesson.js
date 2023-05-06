@@ -7,6 +7,10 @@ const TestLessonSchema = new mongoose.Schema({
     sparse: true
   },
   itemsTest: [{
+    id: {
+      type: String,
+      sparse: true
+    },
     question: {
       type: String,
       sparse: true

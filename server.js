@@ -122,3 +122,10 @@ app.post(
   // valid.passesLessonValidation,
   handleValidationError,
   control.TestLessonController.create);
+app.patch(
+  '/lessons/test/:id',
+  checkAuth,
+  // valid.passesLessonValidation,
+  handleValidationError,
+  control.TestLessonController.update
+);

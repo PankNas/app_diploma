@@ -6,6 +6,7 @@ export const create = async (req, res) => {
   try {
     const doc = new TestLessonModel({
       type: req.body.type,
+      id: req.body.id,
       title: req.body.title,
       itemsTest: req.body.itemsTest,
       course: req.body.course,
@@ -19,20 +20,23 @@ export const create = async (req, res) => {
   }
 };
 
-// export const update = async (req, res) => {
-//   try {
-//     const lessonId = req.params.id;
-//
-//     await PassesLessonModel.updateOne(
-//       {_id: lessonId},
-//       {
-//         title: req.body.title,
-//         sentence: req.body.sentence,
-//       }
-//     );
-//
-//     res.json({success: true});
-//   } catch (err) {
-//     throwError(res, err, 500, 'Не удалось обновить урок');
-//   }
-// };
+export const update = async (req, res) => {
+  try {
+    const lessonId = req.params.id;
+
+    await TestLessonModel.updateOne(
+      {_id: lessonId},
+      {
+        type: req.body.type,
+        id: req.body.id,
+        title: req.body.title,
+        itemsTest: req.body.itemsTest,
+        course: req.body.course,
+      }
+    );
+
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить урок');
+  }
+};
