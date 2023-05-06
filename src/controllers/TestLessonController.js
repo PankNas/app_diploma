@@ -4,7 +4,12 @@ import TestLessonModel from "../models/TestLesson.js";
 
 export const create = async (req, res) => {
   try {
-    const doc = new TestLessonModel({});
+    const doc = new TestLessonModel({
+      type: req.body.type,
+      title: req.body.title,
+      itemsTest: req.body.itemsTest,
+      course: req.body.course,
+    });
 
     const lesson = await createLesson(doc, TestLessonModel);
 

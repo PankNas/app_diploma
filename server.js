@@ -121,13 +121,4 @@ app.post(
   checkAuth,
   // valid.passesLessonValidation,
   handleValidationError,
-  control.PassesLessonController.create);
-
-// test item
-app.get('/lessons/test/item/:id', checkAuth, control.ItemTestController.getOne);
-app.post(
-  '/lessons/test/item',
-  checkAuth,
-  // valid.videoLessonValidation,
-  handleValidationError,
-  control.ItemTestController.create);
+  control.TestLessonController.create);

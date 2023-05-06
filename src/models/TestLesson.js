@@ -6,10 +6,23 @@ const TestLessonSchema = new mongoose.Schema({
     type: Number,
     sparse: true
   },
-  items: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'ItemTest',
-    sparse: true
+  itemsTest: [{
+    question: {
+      type: String,
+      sparse: true
+    },
+    options: {
+      type: [String],
+      sparse: true
+    },
+    answer: {
+      type: Number,
+      sparse: true
+    },
+    score: {
+      type: Number,
+      sparse: true
+    },
   }],
 }, {
   timestamps: true
