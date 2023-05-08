@@ -61,14 +61,15 @@ export const create = async (req, res) => {
 export const remove = async (req, res) => {
   try {
     const courseId = req.params.id;
-
+[]
     CourseModel.findOneAndDelete({_id: courseId})
       .then(doc => {
-        if (!doc) return throwError(res, '', 500, 'Не удалось удалить курс');
+        console.log(doc);
+        if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить курс');
 
         res.json({success: true});
       })
-      .catch(_ => throwError(res, '', 500, 'Не удалось удалить курс'));
+      .catch(err => throwError(res, err, 500, 'Не удалось удалить курс'));
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить курс');
   }
