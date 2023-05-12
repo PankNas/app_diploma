@@ -66,7 +66,7 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.userId).populate('teachCourses');
+    const user = await UserModel.findById(req.userId).populate('teachCourses studentCourses');
 
     if (!user)
       return throwError(res, '', 404, 'Пользователь не найден');

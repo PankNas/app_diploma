@@ -58,13 +58,29 @@ export const create = async (req, res) => {
   }
 };
 
+export const subscript = async (req, res) => {
+  try {
+    const courseId = req.body.id;
+    console.log(req.body.id);
+
+    const course = await CourseModel.findById(courseId);
+    const user = await UserModel.findById(req.userId).populate('studentCourses');
+
+    user.studentCourses.push(course);
+    await user.save();
+
+    res.json(course);
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось записаться на курс');
+  }
+};
+
 export const remove = async (req, res) => {
   try {
     const courseId = req.params.id;
-[]
+
     CourseModel.findOneAndDelete({_id: courseId})
       .then(doc => {
-        console.log(doc);
         if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить курс');
 
         res.json({success: true});

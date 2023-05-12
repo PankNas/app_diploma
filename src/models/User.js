@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema({
     ref: 'Course',
     sparse: true
   }],
+  studentCourses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+    sparse: true
+  }],
 
 }, {
   timestamps: true,
