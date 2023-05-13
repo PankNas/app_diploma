@@ -48,6 +48,7 @@ app.get('/courses', checkAuth, control.CourseController.getAll);
 app.get('/courses/:id', checkAuth, control.CourseController.getOne);
 app.post('/courses', checkAuth, valid.courseValidation, handleValidationError, control.CourseController.create);
 app.post('/courses/subscript', checkAuth, handleValidationError, control.CourseController.subscript);
+app.post('/courses/progress', checkAuth, handleValidationError, control.CourseController.progress);
 app.delete('/courses/:id', checkAuth, control.CourseController.remove);
 app.patch(
   '/courses/:id',

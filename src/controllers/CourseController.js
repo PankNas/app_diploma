@@ -46,8 +46,6 @@ export const create = async (req, res) => {
 
     const course = await doc.save();
 
-    // const videoLesson = await VideoLessonModel.findById(doc._id).populate('course');
-
     let user = await UserModel.findById(req.userId).populate('teachCourses');
     user.teachCourses.push(course);
     await user.save();
@@ -61,12 +59,15 @@ export const create = async (req, res) => {
 export const subscript = async (req, res) => {
   try {
     const courseId = req.body.id;
-    console.log(req.body.id);
 
     const course = await CourseModel.findById(courseId);
     const user = await UserModel.findById(req.userId).populate('studentCourses');
 
     user.studentCourses.push(course);
+    user.progressCourses.push({
+      course: course,
+      lessonsEnd: [],
+    })
     await user.save();
 
     res.json(course);
@@ -74,6 +75,21 @@ export const subscript = async (req, res) => {
     throwError(res, err, 500, 'Не удалось записаться на курс');
   }
 };
+
+export const progress = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId).populate('progressCourses');
+
+    const indexCourse = user.studentCourses.indexOf(req.body.course);
+    user.progressCourses[indexCourse].lessonsEnd.push(req.body.lesson);
+
+    await user.save();
+
+    res.json(user);
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось записать прогресс');
+  }
+}
 
 export const remove = async (req, res) => {
   try {

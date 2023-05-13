@@ -29,7 +29,7 @@ export const update = async (req, res) => {
       {
         title: req.body.title,
         desc: req.body.desc,
-        videoUrl: req.body.imageUrl,
+        videoUrl: req.body.videoUrl,
       }
     );
 

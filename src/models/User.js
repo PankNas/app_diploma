@@ -26,6 +26,18 @@ const UserSchema = new mongoose.Schema({
     ref: 'Course',
     sparse: true
   }],
+  progressCourses: [{
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+      sparse: true
+    },
+    lessonsEnd: [String],
+    // resLessons: [{
+    //   lessonId: String,
+    //   answer: String,
+    // }],
+  }]
 
 }, {
   timestamps: true,
