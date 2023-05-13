@@ -7,3 +7,4 @@ export * as TextLessonController from './TextLessonController.js';
 export * as SentenceLessonController from './SentenceLessonController.js';
 export * as PassesLessonController from './PassesLessonController.js';
 export * as TestLessonController from './TestLessonController.js';
+export * as TranslateLessonController from './TranslateLessonController.js';

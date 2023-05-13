@@ -131,3 +131,17 @@ app.patch(
   handleValidationError,
   control.TestLessonController.update
 );
+
+app.post(
+  '/lessons/translate',
+  checkAuth,
+  // valid.passesLessonValidation,
+  handleValidationError,
+  control.TranslateLessonController.create);
+app.patch(
+  '/lessons/translate/:id',
+  checkAuth,
+  // valid.passesLessonValidation,
+  handleValidationError,
+  control.TranslateLessonController.update
+);
