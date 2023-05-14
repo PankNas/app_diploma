@@ -76,6 +76,26 @@ export const subscript = async (req, res) => {
   }
 };
 
+export const unsubscribe = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    const course = await CourseModel.findById(courseId);
+    const user = await UserModel.findById(req.userId).populate('studentCourses');
+
+    const index = user.studentCourses.findIndex(item => item === course);
+
+    user.studentCourses.splice(index, 1);
+    user.progressCourses.splice(index, 1);
+
+    await user.save();
+
+    res.json(course);
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось отписаться от курса');
+  }
+};
+
 export const progress = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId).populate('progressCourses');
