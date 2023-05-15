@@ -4,7 +4,7 @@ import UserModel from "../models/User.js";
 
 export const getAll = async (req, res) => {
   try {
-    const courses = await CourseModel.find().populate('user').exec();
+    const courses = await CourseModel.find().populate('user lessons').exec();
 
     res.json(courses);
   } catch (err) {
@@ -67,7 +67,7 @@ export const subscript = async (req, res) => {
     user.progressCourses.push({
       course: course,
       lessonsEnd: [],
-    })
+    });
     await user.save();
 
     res.json(course);
@@ -109,15 +109,36 @@ export const progress = async (req, res) => {
   } catch (err) {
     throwError(res, err, 500, 'Не удалось записать прогресс');
   }
-}
+};
 
 export const remove = async (req, res) => {
   try {
     const courseId = req.params.id;
 
+    // CourseModel.pre('remove', {document: true}, async function (next) {
+    //   try {
+    //     const courseId = this._id;
+    //     // Удаление курса из списка пользователей
+    //     const users = await User.find({'progressCourses.course': courseId});
+    //     users.forEach(async (user) => {
+    //       user.progressCourses = user.progressCourses.filter((p) => String(p.course) !== String(courseId));
+    //       await user.save();
+    //     });
+    //     next();
+    //   } catch (err) {
+    //     next(err);
+    //   }
+    // });
+
     CourseModel.findOneAndDelete({_id: courseId})
-      .then(doc => {
+      .then(async doc => {
         if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить курс');
+
+        await UserModel.updateMany(
+          {},
+          {$pull: {teachCourses: courseId, studentCourses: courseId, progressCourses: courseId}},
+          {new: true}
+        );
 
         res.json({success: true});
       })

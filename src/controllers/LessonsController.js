@@ -39,9 +39,16 @@ export const remove = async (req, res) => {
       .then(async doc => {
         if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить урок');
 
+        await CourseModel.updateMany(
+          {},
+          {$pull: {lessons: lessonId}},
+          {new: true}
+        );
+
         res.json({success: true});
       })
       .catch(err => throwError(res, err, 500, 'Не удалось удалить урок'));
+
   } catch (err) {
     throwError(res, err, 500, 'Не удалось получить урок');
   }

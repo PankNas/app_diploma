@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import UserModel from './User.js';
 
 const CourseSchema = new mongoose.Schema({
   title: {
@@ -32,6 +33,24 @@ const CourseSchema = new mongoose.Schema({
 
 }, {
   timestamps: true,
+  cascadeDelete: true,
+});
+
+CourseSchema.pre('remove', async function (next) {
+  try {
+    const courseId = this._id;
+    // Удаление курса из списка пользователей
+    const users = await UserModel.find({ 'progressCourses.course': courseId });
+
+    users.forEach(async (user) => {
+      user.progressCourses = user.progressCourses.filter((p) => String(p.course) !== String(courseId));
+      await user.save();
+    });
+
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default mongoose.model('Course', CourseSchema);

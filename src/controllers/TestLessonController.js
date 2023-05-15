@@ -9,6 +9,7 @@ export const create = async (req, res) => {
       id: req.body.id,
       title: req.body.title,
       itemsTest: req.body.itemsTest,
+      totalScore: req.body.totalScore,
       course: req.body.course,
     });
 
@@ -27,11 +28,10 @@ export const update = async (req, res) => {
     await TestLessonModel.updateOne(
       {_id: lessonId},
       {
-        type: req.body.type,
         id: req.body.id,
         title: req.body.title,
         itemsTest: req.body.itemsTest,
-        course: req.body.course,
+        totalScore: req.body.totalScore,
       }
     );
 
