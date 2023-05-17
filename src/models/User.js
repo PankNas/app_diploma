@@ -21,6 +21,15 @@ const UserSchema = new mongoose.Schema({
     ref: 'Course',
     sparse: true
   }],
+  // studentCourses: [{
+  //   course: {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'Course',
+  //     sparse: true
+  //   },
+  //   lessonEnd: Number,
+  // }],
+
   studentCourses: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',

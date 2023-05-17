@@ -36,11 +36,11 @@ const CourseSchema = new mongoose.Schema({
   cascadeDelete: true,
 });
 
-CourseSchema.pre('remove', async function (next) {
+CourseSchema.pre('findOneAndDelete', async function (next) {
   try {
     const courseId = this._id;
     // Удаление курса из списка пользователей
-    const users = await UserModel.find({ 'progressCourses.course': courseId });
+    const users = await UserModel.find({ 'studentCourses.course': courseId });
 
     users.forEach(async (user) => {
       user.progressCourses = user.progressCourses.filter((p) => String(p.course) !== String(courseId));

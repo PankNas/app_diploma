@@ -4,7 +4,7 @@ import UserModel from "../models/User.js";
 
 export const getAll = async (req, res) => {
   try {
-    const courses = await CourseModel.find().populate('user lessons').exec();
+    const courses = await CourseModel.find().populate('user').exec();
 
     res.json(courses);
   } catch (err) {
@@ -23,7 +23,7 @@ export const getOne = async (req, res) => {
     )
       .populate('user lessons')
       .then(doc => {
-        if (!doc) return throwError(res, '', 404, 'Курс не найден!');
+        if (!doc) return throwError(res, 'error course', 404, 'Курс не найден!');
 
         res.json(doc);
       })
@@ -68,6 +68,11 @@ export const subscript = async (req, res) => {
       course: course,
       lessonsEnd: [],
     });
+    // user.studentCourses.push({
+    //   course: course,
+    //   lessonEnd: 0,
+    // });
+
     await user.save();
 
     res.json(course);
@@ -87,10 +92,11 @@ export const unsubscribe = async (req, res) => {
 
     user.studentCourses.splice(index, 1);
     user.progressCourses.splice(index, 1);
+    // user.studentCourses = user.studentCourses.filter(item => item._id !== courseId);
 
     await user.save();
 
-    res.json(course);
+    res.json({success: true});
   } catch (err) {
     throwError(res, err, 500, 'Не удалось отписаться от курса');
   }
@@ -98,7 +104,7 @@ export const unsubscribe = async (req, res) => {
 
 export const progress = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.userId).populate('progressCourses');
+    const user = await UserModel.findById(req.userId);
 
     const indexCourse = user.studentCourses.indexOf(req.body.course);
     user.progressCourses[indexCourse].lessonsEnd.push(req.body.lesson);
@@ -114,21 +120,6 @@ export const progress = async (req, res) => {
 export const remove = async (req, res) => {
   try {
     const courseId = req.params.id;
-
-    // CourseModel.pre('remove', {document: true}, async function (next) {
-    //   try {
-    //     const courseId = this._id;
-    //     // Удаление курса из списка пользователей
-    //     const users = await User.find({'progressCourses.course': courseId});
-    //     users.forEach(async (user) => {
-    //       user.progressCourses = user.progressCourses.filter((p) => String(p.course) !== String(courseId));
-    //       await user.save();
-    //     });
-    //     next();
-    //   } catch (err) {
-    //     next(err);
-    //   }
-    // });
 
     CourseModel.findOneAndDelete({_id: courseId})
       .then(async doc => {
@@ -160,7 +151,6 @@ export const update = async (req, res) => {
         imageUrl: req.body.imageUrl,
         language: req.body.language,
         levelLanguage: req.body.levelLanguage,
-        user: req.userId,
       }
     );
 

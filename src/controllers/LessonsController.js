@@ -21,7 +21,7 @@ export const getOne = async (req, res) => {
     LessonModel.findOne({_id: lessonId})
       .populate('course')
       .then(doc => {
-        if (!doc) return throwError(res, '', 404, 'Урок не найден!');
+        if (!doc) return throwError(res, 'error lessons', 404, 'Урок не найден!');
 
         res.json(doc);
       })
