@@ -11,6 +11,7 @@ export const create = async (req, res) => {
       options: req.body.options,
       answer: req.body.answer,
       course: req.body.course,
+      module: req.body.module,
     });
 
     const lesson = await createLesson(doc, TranslateLessonModel);

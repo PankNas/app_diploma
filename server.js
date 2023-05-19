@@ -61,6 +61,21 @@ app.post('/courses/progress', checkAuth, handleValidationError, control.CourseCo
 app.delete('/courses/subscript/:id', checkAuth, handleValidationError, control.CourseController.unsubscribe);
 
 
+// modules
+app.post(
+  '/modules',
+  checkAuth,
+  handleValidationError,
+  control.ModuleLessonController.create
+);
+app.delete('/modules/:id', checkAuth, control.ModuleLessonController.remove);
+app.patch(
+  '/modules/:id',
+  checkAuth,
+  handleValidationError,
+  control.ModuleLessonController.update
+);
+
 // lessons
 app.get('/lessons/:id', checkAuth, control.LessonController.getOne);
 app.delete('/lessons/:id', checkAuth, control.LessonController.remove);
@@ -70,7 +85,8 @@ app.post(
   checkAuth,
   valid.videoLessonValidation,
   handleValidationError,
-  control.VideoLessonController.create);
+  control.VideoLessonController.create
+);
 app.patch(
   '/lessons/video/:id',
   checkAuth,

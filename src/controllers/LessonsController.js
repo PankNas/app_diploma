@@ -1,15 +1,17 @@
 import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 import LessonModel from "../models/Lesson.js";
+import ModuleLessonModel from "../models/ModuleLesson.js";
+import UserModel from "../models/User.js";
 
 export const createLesson = async (doc, model) => {
   await doc.save();
 
   const lesson = await model.findById(doc._id).populate('course');
 
-  let course = await CourseModel.findById(doc.course).populate('lessons');
-  course.lessons.push(lesson);
-  await course.save();
+  let module = await ModuleLessonModel.findById(doc.module).populate('lessons');
+  module.lessons.push(lesson);
+  await module.save();
 
   return lesson;
 };
@@ -19,7 +21,7 @@ export const getOne = async (req, res) => {
     const lessonId = req.params.id;
 
     LessonModel.findOne({_id: lessonId})
-      .populate('course')
+      .populate('module')
       .then(doc => {
         if (!doc) return throwError(res, 'error lessons', 404, 'Урок не найден!');
 
@@ -39,11 +41,17 @@ export const remove = async (req, res) => {
       .then(async doc => {
         if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить урок');
 
-        await CourseModel.updateMany(
+        await ModuleLessonModel.updateMany(
           {},
           {$pull: {lessons: lessonId}},
           {new: true}
         );
+
+        // await UserModel.updateMany(
+        //   {},
+        //   {$pull: {progressCourses: lessonId}},
+        //   {new: true}
+        // );
 
         res.json({success: true});
       })

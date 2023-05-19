@@ -1,27 +1,22 @@
 import mongoose from "mongoose";
 
-const LessonSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    required: true
-  },
+const ModuleLessonSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    sparse: true
   },
-
   course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',
     required: true
   },
-  module: {
+  lessons: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ModuleLesson',
-    required: true
-  },
+    ref: 'Lesson',
+    sparse: true
+  }],
 }, {
   timestamps: true
 });
 
-export default mongoose.model('Lesson', LessonSchema);
+export default mongoose.model('ModuleLesson', ModuleLessonSchema);

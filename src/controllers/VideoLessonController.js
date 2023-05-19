@@ -10,6 +10,7 @@ export const create = async (req, res) => {
       desc: req.body.desc,
       videoUrl: req.body.videoUrl,
       course: req.body.course,
+      module: req.body.module,
     });
 
     const lesson = await createLesson(doc, VideoLessonModel);

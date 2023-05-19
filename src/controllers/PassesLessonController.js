@@ -9,6 +9,7 @@ export const create = async (req, res) => {
       title: req.body.title,
       sentence: req.body.sentence,
       course: req.body.course,
+      module: req.body.module,
     });
 
     const lesson = await createLesson(doc, PassesLessonModel);

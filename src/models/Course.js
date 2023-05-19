@@ -25,9 +25,14 @@ const CourseSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  lessons: [{
+  // lessons: [{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Lesson',
+  //   sparse: true
+  // }],
+  modules: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Lesson',
+    ref: 'ModuleLesson',
     sparse: true
   }],
 

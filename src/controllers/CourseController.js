@@ -21,7 +21,7 @@ export const getOne = async (req, res) => {
       // {$inc: {viewsCount: 1}},
       {returnDocument: 'after'}
     )
-      .populate('user lessons')
+      .populate('user modules')
       .then(doc => {
         if (!doc) return throwError(res, 'error course', 404, 'Курс не найден!');
 
