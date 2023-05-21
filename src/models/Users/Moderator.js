@@ -3,14 +3,14 @@ import User from './User.js';
 
 const ModeratorSchema = new mongoose.Schema({
   codeAccess: {
-    type: Number,
+    type: String,
     required: true,
   },
-  ReviewCourses: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-    sparse: true
-  }
+  // ReviewCourses: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Course',
+  //   sparse: true
+  // }
 }, {
   timestamps: true,
 });

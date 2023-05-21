@@ -15,10 +15,6 @@ export const registerMember = async (request, passHash) =>
   });
 
 export const registerModerator = async (request, passHash) => {
-  const code = await findCodeModerator(request.body.codeAccess)
-
-  if (!code) throw new Error('Неверный код доступа');
-
   const doc = new ModeratorModel({
     email: request.body.email,
     role: 'moderator',
@@ -37,13 +33,9 @@ export const registerModerator = async (request, passHash) => {
 }
 
 export const registerAdm = async (request, passHash) => {
-  const code = await findCodeAdm(request.body.codeAccess)
+  const access = await AccessCodeModel.findOne();
 
-  if (!code) throw new Error('Неверный код доступа');
-
-  const access = AccessCodeModel.findOne();
-
-  const doc =  new AdmModel({
+  const doc = new AdmModel({
     email: request.body.email,
     role: 'adm',
     fullName: request.body.fullName,

@@ -37,11 +37,7 @@ export const getOne = async (req, res) => {
 export const create = async (req, res) => {
   try {
     const doc = new CourseModel({
-      title: req.body?.title,
-      desc: req.body?.desc,
-      imageUrl: req.body?.imageUrl,
-      language: req.body?.language,
-      levelLanguage: req.body?.levelLanguage,
+      status: 'passive',
       user: req.userId,
     });
 
@@ -152,6 +148,7 @@ export const update = async (req, res) => {
         imageUrl: req.body.imageUrl,
         language: req.body.language,
         levelLanguage: req.body.levelLanguage,
+        status: req.body.status
       }
     );
 

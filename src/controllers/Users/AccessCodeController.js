@@ -3,18 +3,13 @@ import {throwError} from "../../utils/throwError.js";
 
 export const findCodeModerator = async (codeAccess) => {
   try {
-    const result = AccessCodeModel.findOne({
-      codesModerator: { $elemMatch: { code: { $eq: codeAccess } } }
-    }, { 'codesModerator.$': 1 }); // $ - означает, что мы хотим получить только первый совпадающий элемент
+    console.log(codeAccess);
+    const access = await AccessCodeModel.findOne();
 
-    if (result && result.codesModerator && result.codesModerator.length > 0) {
-      const moderatorCode = result.codesModerator[0];
-      console.log("Код модератора: ", moderatorCode);
-      return moderatorCode;
-    } else {
-      console.log("Код модератора не найден");
-      return false;
-    }
+    return access.codesModerator.find(elem => {
+      return elem.code === codeAccess && !elem?.user;
+    });
+
   } catch (error) {
     console.error("Ошибка при поиске кода модератора: ", error);
     throw error;
@@ -23,9 +18,9 @@ export const findCodeModerator = async (codeAccess) => {
 
 export const findCodeAdm = async (codeAccess) => {
   try {
-    const access = AccessCodeModel.findOne();
+    const access = await AccessCodeModel.findOne();
 
-    return access.codeAdm?.code === codeAccess;
+    return access.codeAdm?.code === codeAccess && !access.codeAdm.user;
 
   } catch (error) {
     console.error("Ошибка при поиске кода модератора: ", error);

@@ -1,6 +1,9 @@
 export * as UserController from "./Users/UserController.js";
+export * as ModeratorController from "./Users/ModeratorController.js";
 export * as AccessCodeController from "./Users/AccessCodeController.js";
+
 export * as CourseController from "./CourseController.js";
+
 export * as LessonController from './LessonsController.js';
 export * as ModuleLessonController from './ModuleLessonController.js';
 

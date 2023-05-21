@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import UserModel from './Users/User.js';
 
 const CourseSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     sparse: true
@@ -25,11 +29,6 @@ const CourseSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  // lessons: [{
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Lesson',
-  //   sparse: true
-  // }],
   modules: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ModuleLesson',
