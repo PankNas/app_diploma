@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import UserModel from "../../models/Users/User.js";
 import {throwError} from "../../utils/throwError.js";
 import {registerMember, registerModerator, registerAdm} from "./registeration.js";
+import AccessCodeModel from "../../models/Users/AccessCode.js";
 
 export const register = async (request, response) => {
   try {
@@ -48,12 +49,28 @@ export const login = async (req, res) => {
     const user = await UserModel.findOne({email: req.body.email});
 
     if (!user)
-      return throwError(res, '', 404, 'Неверный логин или пароль');
+      return throwError(res, '', 404, 'Неверне данные');
 
     const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
     if (!isValidPass)
-      return throwError(res, '', 400, 'Неверный логин или пароль');
+      return throwError(res, '', 400, 'Неверные данные');
+
+    const access = await AccessCodeModel.findOne();
+
+    switch (user.role) {
+      case 'adm':
+        if (user.codeAccess !== access.codeAdm.code)
+          return throwError(res, '', 400, 'Неверные данные');
+        break;
+
+      case 'moderator':
+        const code = access.codesModerator.find(elem => elem.code === user.codeAccess);
+
+        if (!code)
+          return throwError(res, '', 400, 'Неверные данные');
+        break;
+    }
 
     const token = jwt.sign(
       {_id: user._id,},

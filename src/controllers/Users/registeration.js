@@ -1,6 +1,7 @@
 import MemberModel from '../../models/Users/Member.js';
 import ModeratorModel from '../../models/Users/Moderator.js';
 import AdmModel from '../../models/Users/Adm.js';
+import AccessCodeModel from "../../models/Users/AccessCode.js";
 
 import {findCodeAdm, findCodeModerator} from "./AccessCodeController.js";
 
@@ -18,7 +19,7 @@ export const registerModerator = async (request, passHash) => {
 
   if (!code) throw new Error('Неверный код доступа');
 
-  return new ModeratorModel({
+  const doc = new ModeratorModel({
     email: request.body.email,
     role: 'moderator',
     fullName: request.body.fullName,
@@ -26,6 +27,13 @@ export const registerModerator = async (request, passHash) => {
     passwordHash: passHash,
     codeAccess: request.body.codeAccess,
   });
+
+  await AccessCodeModel.updateOne(
+    {},
+    {user: doc}
+  );
+
+  return doc;
 }
 
 export const registerAdm = async (request, passHash) => {
@@ -33,7 +41,9 @@ export const registerAdm = async (request, passHash) => {
 
   if (!code) throw new Error('Неверный код доступа');
 
-  return new AdmModel({
+  const access = AccessCodeModel.findOne();
+
+  const doc =  new AdmModel({
     email: request.body.email,
     role: 'adm',
     fullName: request.body.fullName,
@@ -41,4 +51,9 @@ export const registerAdm = async (request, passHash) => {
     passwordHash: passHash,
     codeAccess: request.body.codeAccess,
   });
+
+  access.codeAdm.user = doc;
+  await access.save();
+
+  return doc;
 }
