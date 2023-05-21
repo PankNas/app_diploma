@@ -1,4 +1,4 @@
-import TextLessonModel from "../models/TextLesson.js";
+import TextLessonModel from "../models/Lessons/TextLesson.js";
 import {throwError} from "../utils/throwError.js";
 import {createLesson} from "./LessonsController.js";
 

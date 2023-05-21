@@ -1,4 +1,4 @@
-import VideoLessonModel from "../models/VideoLesson.js";
+import VideoLessonModel from "../models/Lessons/VideoLesson.js";
 import {throwError} from "../utils/throwError.js";
 import {createLesson} from "./LessonsController.js";
 

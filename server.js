@@ -34,16 +34,27 @@ app.use(express.json());
 app.use('/uploads', express.static('src/uploads'));
 app.use(cors());
 
+// access
+app.post('/access', handleValidationError, control.AccessCodeController.create);
+app.patch(
+  '/access',
+  handleValidationError,
+  control.AccessCodeController.addCode
+);
+
+// user
 app.post('/auth/register', valid.registerValidation, handleValidationError, control.UserController.register);
 app.post('/auth/login', valid.loginValidation, handleValidationError, control.UserController.login);
 app.get('/auth/me', checkAuth, control.UserController.getMe);
 
+// file
 app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
   res.json({
     url: `/src/uploads/${req.file.originalname}`,
   });
 });
 
+// courses
 app.get('/courses', checkAuth, control.CourseController.getAll);
 app.get('/courses/:id', checkAuth, control.CourseController.getOne);
 app.post('/courses', checkAuth, valid.courseValidation, handleValidationError, control.CourseController.create);

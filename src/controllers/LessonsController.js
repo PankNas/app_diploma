@@ -1,8 +1,8 @@
 import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
-import LessonModel from "../models/Lesson.js";
-import ModuleLessonModel from "../models/ModuleLesson.js";
-import UserModel from "../models/User.js";
+import LessonModel from "../models/Lessons/Lesson.js";
+import ModuleLessonModel from "../models/Lessons/ModuleLesson.js";
+import UserModel from "../models/Users/User.js";
 
 export const createLesson = async (doc, model) => {
   await doc.save();

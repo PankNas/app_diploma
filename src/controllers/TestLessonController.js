@@ -1,6 +1,6 @@
 import {throwError} from "../utils/throwError.js";
 import {createLesson} from "./LessonsController.js";
-import TestLessonModel from "../models/TestLesson.js";
+import TestLessonModel from "../models/Lessons/TestLesson.js";
 
 export const create = async (req, res) => {
   try {

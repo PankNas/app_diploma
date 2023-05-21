@@ -1,4 +1,4 @@
-import SentenceLessonModel from "../models/SentenceLesson.js";
+import SentenceLessonModel from "../models/Lessons/SentenceLesson.js";
 import {throwError} from "../utils/throwError.js";
 import {createLesson} from "./LessonsController.js";
 
