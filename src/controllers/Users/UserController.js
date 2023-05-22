@@ -91,7 +91,7 @@ export const login = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId)
-      .populate('teachCourses')
+      .populate({path: 'teachCourses'})
       .populate({path: 'studentCourses', populate: {path: 'modules'}});
 
     if (!user)

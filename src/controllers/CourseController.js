@@ -143,12 +143,12 @@ export const update = async (req, res) => {
     await CourseModel.updateOne(
       {_id: courseId},
       {
-        title: req.body.title,
-        desc: req.body.desc,
-        imageUrl: req.body.imageUrl,
-        language: req.body.language,
-        levelLanguage: req.body.levelLanguage,
-        status: req.body.status
+        title: req.body?.title,
+        desc: req.body?.desc,
+        imageUrl: req.body?.imageUrl,
+        language: req.body?.language,
+        levelLanguage: req.body?.levelLanguage,
+        status: req.body?.status
       }
     );
 
