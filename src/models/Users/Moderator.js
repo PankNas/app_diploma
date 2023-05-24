@@ -6,11 +6,11 @@ const ModeratorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // ReviewCourses: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Course',
-  //   sparse: true
-  // }
+  reviewCourses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+    sparse: true
+  }]
 }, {
   timestamps: true,
 });

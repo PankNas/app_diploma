@@ -6,6 +6,9 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  countCheck: {
+    type: Number,
+  },
   title: {
     type: String,
     sparse: true

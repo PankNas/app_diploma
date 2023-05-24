@@ -148,7 +148,8 @@ export const update = async (req, res) => {
         imageUrl: req.body?.imageUrl,
         language: req.body?.language,
         levelLanguage: req.body?.levelLanguage,
-        status: req.body?.status
+        status: req.body?.status,
+        countCheck: req.body?.countCheck,
       }
     );
 

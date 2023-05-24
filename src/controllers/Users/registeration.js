@@ -24,10 +24,11 @@ export const registerModerator = async (request, passHash) => {
     codeAccess: request.body.codeAccess,
   });
 
-  await AccessCodeModel.updateOne(
-    {},
-    {user: doc}
-  );
+  const access = await AccessCodeModel.findOne();
+  const mod = access.codesModerator.find(elem => elem.code === request.body.codeAccess);
+  mod.user = doc;
+
+  await access.save();
 
   return doc;
 }

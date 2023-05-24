@@ -48,7 +48,7 @@ export const login = async (req, res) => {
     const user = await UserModel.findOne({email: req.body.email});
 
     if (!user)
-      return throwError(res, '', 404, 'Неверне данные');
+      return throwError(res, '', 404, 'Неверные данные');
 
     const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
 
@@ -91,7 +91,7 @@ export const login = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId)
-      .populate({path: 'teachCourses'})
+      .populate({path: 'teachCourses reviewCourses'})
       .populate({path: 'studentCourses', populate: {path: 'modules'}});
 
     if (!user)

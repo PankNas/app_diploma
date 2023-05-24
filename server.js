@@ -47,6 +47,10 @@ app.post('/auth/register', valid.registerValidation, handleValidationError, cont
 app.post('/auth/login', valid.loginValidation, handleValidationError, control.UserController.login);
 app.get('/auth/me', checkAuth, control.UserController.getMe);
 
+// moderator
+app.post('/moderate', checkAuth, handleValidationError, control.ModeratorController.add);
+app.delete('/moderate/:id', checkAuth, handleValidationError, control.ModeratorController.remove);
+
 // file
 app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
   res.json({
