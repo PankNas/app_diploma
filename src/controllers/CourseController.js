@@ -148,10 +148,24 @@ export const update = async (req, res) => {
         imageUrl: req.body?.imageUrl,
         language: req.body?.language,
         levelLanguage: req.body?.levelLanguage,
-        status: req.body?.status,
-        countCheck: req.body?.countCheck,
+        // status: req.body?.status,
+        // countCheck: req.body?.countCheck,
       }
     );
+
+    const course = await CourseModel.findById(courseId);
+    const remarkIndex = course.remarks.findIndex(remark => remark.id === req.body.id);
+
+    if (remarkIndex === -1) {
+      course.remarks.push({
+        id: req.body.id,
+        text: req.body.text,
+      })
+    } else {
+      course.remarks[remarkIndex].text = req.body.text;
+    }
+
+    await course.save();
 
     res.json({success: true});
   } catch (err) {

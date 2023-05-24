@@ -6,9 +6,9 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  countCheck: {
-    type: Number,
-  },
+  // countCheck: {
+  //   type: Number,
+  // },
   title: {
     type: String,
     sparse: true
@@ -37,6 +37,13 @@ const CourseSchema = new mongoose.Schema({
     ref: 'ModuleLesson',
     sparse: true
   }],
+  remarks: [{
+    id: {
+      type: String,
+      required: true,
+    },
+    text: String,
+  }]
 
 }, {
   timestamps: true,
