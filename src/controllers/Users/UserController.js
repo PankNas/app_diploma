@@ -125,19 +125,21 @@ export const getMe = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const courseId = req.params.id;
+    const id = req.params.id;
+    console.log(id, req.body);
 
     await UserModel.updateOne(
-      {_id: courseId},
+      {_id: id},
       {
-        role: req.body.role,
+        role: req.body?.role,
         reviewCourses: req.body?.reviewCourses,
+        avatarUrl: req.body?.avatarUrl,
       }
     );
 
     res.json({success: true});
   } catch (err) {
-    throwError(res, err, 500, 'Не удалось обновить курс');
+    throwError(res, err, 500, 'Не удалось обновить пользователя');
   }
 };
 
