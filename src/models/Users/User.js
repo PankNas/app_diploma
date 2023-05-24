@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import CourseModel from "../Course.js";
 
 const UserSchema = new mongoose.Schema({
   role: {
@@ -50,6 +51,29 @@ const UserSchema = new mongoose.Schema({
   }]
 }, {
   timestamps: true,
+});
+
+UserSchema.pre('remove', async function (next) {
+  try {
+    // Retrieve user teachCourses and studentCourses
+    const {teachCourses, studentCourses} = this;
+
+    // Delete teachCourses and studentCourses
+    await Promise.all([
+      CourseModel.updateMany( // UpdateMany for better performance
+        {_id: {$in: teachCourses}},
+        {$pull: {teachers: this._id}}
+      ),
+      CourseModel.updateMany(
+        {_id: {$in: studentCourses}},
+        {$pull: {students: this._id}}
+      ),
+    ]);
+
+    return next();
+  } catch (error) {
+    return next(error);
+  }
 });
 
 export default mongoose.model('User', UserSchema);

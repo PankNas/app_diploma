@@ -140,3 +140,25 @@ export const update = async (req, res) => {
     throwError(res, err, 500, 'Не удалось обновить курс');
   }
 };
+
+export const remove = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    UserModel.findOneAndDelete({_id: userId})
+      .then(async doc => {
+        if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить пользователя');
+
+        // await CourseModel.updateMany(
+        //   {},
+        //   {$pull: {teachCourses: courseId, studentCourses: courseId, progressCourses: courseId}},
+        //   {new: true}
+        // );
+
+        res.json({success: true});
+      })
+      .catch(err => throwError(res, err, 500, 'Не удалось удалить пользователя'));
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось получить пользователя');
+  }
+};
