@@ -43,6 +43,7 @@ app.patch(
 );
 
 // user
+app.get('/users', checkAuth, control.UserController.getAll);
 app.post('/auth/register', valid.registerValidation, handleValidationError, control.UserController.register);
 app.post('/auth/login', valid.loginValidation, handleValidationError, control.UserController.login);
 app.get('/auth/me', checkAuth, control.UserController.getMe);

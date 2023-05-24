@@ -6,23 +6,41 @@ import {throwError} from "../../utils/throwError.js";
 import {registerMember, registerModerator, registerAdm} from "./registeration.js";
 import AccessCodeModel from "../../models/Users/AccessCode.js";
 import {findCodeAdm, findCodeModerator} from "./AccessCodeController.js";
+import MemberModel from "../../models/Users/Member.js";
+import CourseModel from "../../models/Course.js";
+
+export const getAll = async (req, res) => {
+  try {
+    const courses = await UserModel.find().exec();
+
+    res.json(courses);
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось получить пользователей');
+  }
+};
 
 export const register = async (request, response) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const passHash = await bcrypt.hash(request.body.password, salt);
 
-    let doc = NaN;
+    let doc = new UserModel({
+      email: request.body.email,
+      role: 'member',
+      fullName: request.body.fullName,
+      avatarUrl: request.body.avatarUrl,
+      passwordHash: passHash,
+    });
 
-    if (request.body.codeAccess === '') {
-      doc = await registerMember(request, passHash);
-    } else if (await findCodeModerator(request.body.codeAccess)) {
-      doc = await registerModerator(request, passHash);
-    } else if (await findCodeAdm(request.body.codeAccess)) {
-      doc = await registerAdm(request, passHash);
-    } else {
-      throw new Error('Не удалось зарегистрироваться');
-    }
+    // if (request.body.codeAccess === '') {
+    //   doc = await registerMember(request, passHash);
+    // } else if (await findCodeModerator(request.body.codeAccess)) {
+    //   doc = await registerModerator(request, passHash);
+    // } else if (await findCodeAdm(request.body.codeAccess)) {
+    //   doc = await registerAdm(request, passHash);
+    // } else {
+    //   throw new Error('Не удалось зарегистрироваться');
+    // }
 
     const user = await doc.save();
 
@@ -102,5 +120,23 @@ export const getMe = async (req, res) => {
     res.json(userData);
   } catch (err) {
     throwError(res, err, 500, 'Нет доступа');
+  }
+};
+
+export const update = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    await UserModel.updateOne(
+      {_id: courseId},
+      {
+        role: req.body.role,
+        reviewCourses: req.body?.reviewCourses,
+      }
+    );
+
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить курс');
   }
 };
