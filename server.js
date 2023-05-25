@@ -70,7 +70,7 @@ app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
 // courses
 app.get('/courses', checkAuth, control.CourseController.getAll);
 app.get('/courses/:id', checkAuth, control.CourseController.getOne);
-app.post('/courses', checkAuth, valid.courseValidation, handleValidationError, control.CourseController.create);
+app.post('/courses', checkAuth, handleValidationError, control.CourseController.create);
 app.delete('/courses/:id', checkAuth, control.CourseController.remove);
 app.patch(
   '/courses/:id',

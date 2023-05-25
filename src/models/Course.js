@@ -25,7 +25,10 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     sparse: true
   },
-  imageUrl: String,
+  imageUrl: {
+    type: String,
+    // default: '/uploads/backAvaCourse.jpg'
+  },
 
   user: {
     type: mongoose.Schema.Types.ObjectId,

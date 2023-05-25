@@ -13,11 +13,11 @@ export const loginValidation = [
 ];
 
 export const courseValidation = [
-  body('title', 'Введите заголовок курса').optional().isLength({min: 3}).isString(),
-  body('desc', 'Введите описание курса').optional().isLength({min: 5}).isString(),
-  body('imageUrl', 'Неверный url изображения').optional().optional().isString(),
-  body('language', 'Не определен язык').optional().isString(),
-  body('levelLanguage', 'Не определен уровень языка').optional().isString(),
+  body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
+  body('desc', 'Введите описание курса').isLength({min: 5}).isString(),
+  body('imageUrl', 'Неверный url изображения').optional().isString(),
+  body('language', 'Не определен язык').isString(),
+  body('levelLanguage', 'Не определен уровень языка').isString(),
 ];
 
 export const videoLessonValidation = [

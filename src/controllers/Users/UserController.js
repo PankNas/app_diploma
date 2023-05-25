@@ -24,7 +24,7 @@ export const register = async (request, response) => {
     const salt = await bcrypt.genSalt(10);
     const passHash = await bcrypt.hash(request.body.password, salt);
 
-    let doc = new UserModel({
+    const doc = new UserModel({
       email: request.body.email,
       role: 'member',
       fullName: request.body.fullName,
