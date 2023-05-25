@@ -153,6 +153,17 @@ export const update = async (req, res) => {
       }
     );
 
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить курс');
+  }
+};
+
+export const addRemarkLesson = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const lessonId = req.params.lessonId;
+
     const course = await CourseModel.findById(courseId);
     const remarkIndex = course.remarks.findIndex(remark => remark.id === req.body.id);
 
@@ -166,6 +177,57 @@ export const update = async (req, res) => {
     }
 
     await course.save();
+
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить курс');
+  }
+};
+
+export const addRemarkCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    await CourseModel.updateOne(
+      {_id: courseId},
+      {
+        remarkForCourse: req.body.remarkForCourse,
+      }
+    )
+
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить курс');
+  }
+};
+
+export const removeRemarkCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    await CourseModel.updateOne(
+      {_id: courseId},
+      {
+        remarkForCourse: req.body.remarkForCourse,
+      }
+    )
+
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить курс');
+  }
+};
+
+export const removeRemarkLesson = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    await CourseModel.updateOne(
+      {_id: courseId},
+      {
+        remarkForCourse: req.body.remarkForCourse,
+      }
+    )
 
     res.json({success: true});
   } catch (err) {

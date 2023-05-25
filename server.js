@@ -80,6 +80,17 @@ app.patch(
   control.CourseController.update
 );
 
+app.patch('/remarks/course/:id', checkAuth, handleValidationError, control.CourseController.addRemarkCourse);
+app.delete('/remarks/course/:id', checkAuth, handleValidationError, control.CourseController.removeRemarkCourse);
+app.patch(
+  '/remarks/course/:id/lesson/:lessonId',
+  checkAuth,
+  // valid.courseValidation,
+  handleValidationError,
+  control.CourseController.addRemarkLesson,
+);
+app.delete('/remarks/course/:id/lesson/:lessonId', checkAuth, handleValidationError, control.CourseController.removeRemarkLesson);
+
 app.post('/courses/subscript', checkAuth, handleValidationError, control.CourseController.subscript);
 app.post('/courses/progress', checkAuth, handleValidationError, control.CourseController.progress);
 app.delete('/courses/subscript/:id', checkAuth, handleValidationError, control.CourseController.unsubscribe);

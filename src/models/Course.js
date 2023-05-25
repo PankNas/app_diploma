@@ -40,10 +40,11 @@ const CourseSchema = new mongoose.Schema({
     ref: 'ModuleLesson',
     sparse: true
   }],
+  remarkForCourse: String,
   remarks: [{
     id: {
       type: String,
-      required: true,
+      // required: true,
     },
     text: String,
   }]

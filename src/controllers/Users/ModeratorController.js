@@ -24,7 +24,7 @@ export const remove = async (req, res) => {
     const moderator = await UserModel.findById(req.userId).populate('reviewCourses');
     const course = await CourseModel.findById(courseId);
 
-    const result = await ModeratorModel.findByIdAndUpdate(
+    const result = await UserModel.findByIdAndUpdate(
       moderator._id,
       { $pull: { 'reviewCourses': {$in: course._id} } },
       { new: true }
