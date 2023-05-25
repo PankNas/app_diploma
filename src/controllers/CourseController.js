@@ -165,11 +165,11 @@ export const addRemarkLesson = async (req, res) => {
     const lessonId = req.params.lessonId;
 
     const course = await CourseModel.findById(courseId);
-    const remarkIndex = course.remarks.findIndex(remark => remark.id === req.body.id);
+    const remarkIndex = course.remarks.findIndex(remark => remark.id === lessonId);
 
     if (remarkIndex === -1) {
       course.remarks.push({
-        id: req.body.id,
+        id: lessonId,
         text: req.body.text,
       })
     } else {
