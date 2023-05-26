@@ -9,6 +9,7 @@ const LessonSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  remarks: String,
 
   course: {
     type: mongoose.Schema.Types.ObjectId,

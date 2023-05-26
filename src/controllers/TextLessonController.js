@@ -10,6 +10,7 @@ export const create = async (req, res) => {
       desc: req.body.desc,
       course: req.body.course,
       module: req.body.module,
+      remarks: '',
     });
 
     const lesson = await createLesson(doc, TextLessonModel);
@@ -24,7 +25,7 @@ export const update = async (req, res) => {
   try {
     const lessonId = req.params.id;
 
-    await TextLessonModel.updateOne(
+    const lesson = await TextLessonModel.updateOne(
       {_id: lessonId},
       {
         title: req.body.title,
@@ -33,7 +34,7 @@ export const update = async (req, res) => {
       }
     );
 
-    res.json({success: true});
+    res.json(lesson);
   } catch (err) {
     throwError(res, err, 500, 'Не удалось обновить урок');
   }

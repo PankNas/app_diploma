@@ -11,6 +11,7 @@ export const createLesson = async (doc, model) => {
 
   let module = await ModuleLessonModel.findById(doc.module).populate('lessons');
   module.lessons.push(lesson);
+  console.log(module.lessons);
   await module.save();
 
   return lesson;

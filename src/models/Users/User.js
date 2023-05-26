@@ -55,6 +55,8 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre('remove', async function (next) {
   try {
+    console.log('remote user');
+
     // Retrieve user teachCourses and studentCourses
     const {teachCourses, studentCourses} = this;
 

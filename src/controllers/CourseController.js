@@ -1,6 +1,7 @@
 import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 import UserModel from "../models/Users/User.js";
+import LessonModel from "../models/Lessons/Lesson.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -139,8 +140,9 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const courseId = req.params.id;
+    console.log('courseId', courseId);
 
-    await CourseModel.updateOne(
+    const course = await CourseModel.updateOne(
       {_id: courseId},
       {
         title: req.body?.title,
@@ -153,6 +155,16 @@ export const update = async (req, res) => {
       }
     );
 
+    if (course.status === 'check') {
+      const moderator = await UserModel.findOne({reviewCourses: courseId}).populate('reviewCourses');
+      moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
+      await moderator.save();
+
+      course.remarkForCourse = undefined;
+      course.remarks = [];
+      await course.save();
+    }
+
     res.json({success: true});
   } catch (err) {
     throwError(res, err, 500, 'Не удалось обновить курс');
@@ -164,19 +176,23 @@ export const addRemarkLesson = async (req, res) => {
     const courseId = req.params.id;
     const lessonId = req.params.lessonId;
 
-    const course = await CourseModel.findById(courseId);
-    const remarkIndex = course.remarks.findIndex(remark => remark.id === lessonId);
+    const lesson = await LessonModel.findById(lessonId);
+    lesson.remarks = req.body.text;
+    await lesson.save();
 
-    if (remarkIndex === -1) {
-      course.remarks.push({
-        id: lessonId,
-        text: req.body.text,
-      })
-    } else {
-      course.remarks[remarkIndex].text = req.body.text;
-    }
+    // const course = await CourseModel.findById(courseId);
+    // const remarkIndex = course.remarks.findIndex(remark => remark.id === lessonId);
+    //
+    // if (remarkIndex === -1) {
+    //   course.remarks.push({
+    //     id: lessonId,
+    //     text: req.body.text,
+    //   })
+    // } else {
+    //   course.remarks[remarkIndex].text = req.body.text;
+    // }
 
-    await course.save();
+    // await course.save();
 
     res.json({success: true});
   } catch (err) {

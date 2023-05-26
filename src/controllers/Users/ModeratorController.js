@@ -34,7 +34,7 @@ export const remove = async (req, res) => {
     // moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
     // console.log(moderator.reviewCourses);
     // await moderator.save();
-    console.log(result.reviewCourses);
+    // console.log(result.reviewCourses);
 
     res.json({success: true});
   } catch (err) {

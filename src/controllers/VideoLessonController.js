@@ -25,7 +25,7 @@ export const update = async (req, res) => {
   try {
     const lessonId = req.params.id;
 
-    await VideoLessonModel.updateOne(
+    const lesson = await VideoLessonModel.updateOne(
       {_id: lessonId},
       {
         title: req.body.title,
@@ -34,7 +34,7 @@ export const update = async (req, res) => {
       }
     );
 
-    res.json({success: true});
+    res.json(lesson);
   } catch (err) {
     throwError(res, err, 500, 'Не удалось обновить видеоурок');
   }
