@@ -1,8 +1,8 @@
-import CourseModel from "../models/Course.js";
-import {throwError} from "../utils/throwError.js";
-import LessonModel from "../models/Lessons/Lesson.js";
-import ModuleLessonModel from "../models/Lessons/ModuleLesson.js";
-import UserModel from "../models/Users/User.js";
+import CourseModel from "../../models/Course.js";
+import {throwError} from "../../utils/throwError.js";
+import LessonModel from "../../models/Lessons/Lesson.js";
+import ModuleLessonModel from "../../models/Lessons/ModuleLesson.js";
+import UserModel from "../../models/Users/User.js";
 
 export const createLesson = async (doc, model) => {
   await doc.save();
@@ -11,7 +11,7 @@ export const createLesson = async (doc, model) => {
 
   let module = await ModuleLessonModel.findById(doc.module).populate('lessons');
   module.lessons.push(lesson);
-  console.log(module.lessons);
+
   await module.save();
 
   return lesson;
@@ -22,7 +22,7 @@ export const getOne = async (req, res) => {
     const lessonId = req.params.id;
 
     LessonModel.findOne({_id: lessonId})
-      .populate('module')
+      .populate('module comments')
       .then(doc => {
         if (!doc) return throwError(res, 'error lessons', 404, 'Урок не найден!');
 

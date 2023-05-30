@@ -34,14 +34,6 @@ app.use(express.json());
 app.use('/uploads', express.static('src/uploads'));
 app.use(cors());
 
-// access
-app.post('/access', handleValidationError, control.AccessCodeController.create);
-app.patch(
-  '/access',
-  handleValidationError,
-  control.AccessCodeController.addCode
-);
-
 // user
 app.get('/users', checkAuth, control.UserController.getAll);
 app.delete('/users/:id', checkAuth, control.UserController.remove);
@@ -60,8 +52,11 @@ app.get('/auth/me', checkAuth, control.UserController.getMe);
 app.post('/moderate', checkAuth, handleValidationError, control.ModeratorController.add);
 app.delete('/moderate/:id', checkAuth, handleValidationError, control.ModeratorController.remove);
 
+// comments
+app.post('/comments', checkAuth, handleValidationError, control.CommentController.create);
+
 // file
-app.post('/upload', checkAuth, upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
   res.json({
     url: `/src/uploads/${req.file.originalname}`,
   });

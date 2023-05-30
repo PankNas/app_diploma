@@ -1,19 +1,20 @@
-import TextLessonModel from "../models/Lessons/TextLesson.js";
-import {throwError} from "../utils/throwError.js";
+import {throwError} from "../../utils/throwError.js";
 import {createLesson} from "./LessonsController.js";
+import TranslateLessonModel from "../../models/Lessons/TranslateLesson.js";
 
 export const create = async (req, res) => {
   try {
-    const doc = new TextLessonModel({
+    const doc = new TranslateLessonModel({
       type: req.body.type,
       title: req.body.title,
-      desc: req.body.desc,
+      question: req.body.question,
+      options: req.body.options,
+      answer: req.body.answer,
       course: req.body.course,
       module: req.body.module,
-      remarks: '',
     });
 
-    const lesson = await createLesson(doc, TextLessonModel);
+    const lesson = await createLesson(doc, TranslateLessonModel);
 
     res.json(lesson);
   } catch (err) {
@@ -25,12 +26,13 @@ export const update = async (req, res) => {
   try {
     const lessonId = req.params.id;
 
-    const lesson = await TextLessonModel.updateOne(
+    const lesson = await TranslateLessonModel.updateOne(
       {_id: lessonId},
       {
         title: req.body.title,
-        desc: req.body.desc,
-        course: req.course,
+        question: req.body.question,
+        options: req.body.options,
+        answer: req.body.answer,
       }
     );
 

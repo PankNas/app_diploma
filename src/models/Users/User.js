@@ -53,26 +53,59 @@ const UserSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-UserSchema.pre('remove', async function (next) {
+UserSchema.pre('remote', async function (next) {
   try {
-    console.log('remote user');
+    // Remove associated courses
+    try {
+      await CourseModel.deleteMany({ _id: { $in: this.teachCourses } });
+    } catch (err) {
+      console.log('1', err);
+      next(err);
+    }
 
-    // Retrieve user teachCourses and studentCourses
-    const {teachCourses, studentCourses} = this;
-
-    // Delete teachCourses and studentCourses
-    await Promise.all([
-      CourseModel.updateMany( // UpdateMany for better performance
-        {_id: {$in: teachCourses}},
-        {$pull: {teachers: this._id}}
-      ),
-      CourseModel.updateMany(
-        {_id: {$in: studentCourses}},
-        {$pull: {students: this._id}}
-      ),
-    ]);
+    // Remove the user's reference from teaching courses
+    try {
+      await CourseModel.updateMany(
+        { _id: { $in: this.teachCourses } },
+        { $pull: { user: this._id } }
+      );
+    } catch (err) {
+      console.log(err);
+      next('11', err);
+    }
 
     return next();
+
+    // console.log('remote user');
+    //
+    // // Retrieve user teachCourses and studentCourses
+    // const {teachCourses, studentCourses} = this;
+    //
+    // // const courses = await CourseModel.find({ 'user': this._id });
+    //
+    //
+    // // Delete teachCourses and studentCourses
+    // await Promise.all([
+    //   CourseModel.updateMany( // UpdateMany for better performance
+    //     {_id: {$in: teachCourses}},
+    //     {$pull: {user: this._id}}
+    //   ),
+    //   // CourseModel.updateMany(
+    //   //   {_id: {$in: studentCourses}},
+    //   //   {$pull: {user: this._id}}
+    //   // ),
+    //
+    //   // CourseModel.updateMany( // UpdateMany for better performance
+    //   //   {_id: {$in: teachCourses}},
+    //   //   {$pull: {teachCourses: this._id}}
+    //   // ),
+    //   // CourseModel.updateMany(
+    //   //   {_id: {$in: studentCourses}},
+    //   //   {$pull: {studentCourses: this._id}}
+    //   // ),
+    // ]);
+    //
+    // return next();
   } catch (error) {
     return next(error);
   }

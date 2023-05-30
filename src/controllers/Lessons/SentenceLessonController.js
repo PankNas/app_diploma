@@ -1,20 +1,19 @@
-import {throwError} from "../utils/throwError.js";
+import SentenceLessonModel from "../../models/Lessons/SentenceLesson.js";
+import {throwError} from "../../utils/throwError.js";
 import {createLesson} from "./LessonsController.js";
-import TranslateLessonModel from "../models/Lessons/TranslateLesson.js";
 
 export const create = async (req, res) => {
   try {
-    const doc = new TranslateLessonModel({
+    const doc = new SentenceLessonModel({
       type: req.body.type,
       title: req.body.title,
-      question: req.body.question,
-      options: req.body.options,
-      answer: req.body.answer,
+      sentence: req.body.sentence,
+      translate: req.body.translate,
       course: req.body.course,
       module: req.body.module,
     });
 
-    const lesson = await createLesson(doc, TranslateLessonModel);
+    const lesson = await createLesson(doc, SentenceLessonModel);
 
     res.json(lesson);
   } catch (err) {
@@ -26,17 +25,16 @@ export const update = async (req, res) => {
   try {
     const lessonId = req.params.id;
 
-    const lesson = await TranslateLessonModel.updateOne(
+    await SentenceLessonModel.updateOne(
       {_id: lessonId},
       {
         title: req.body.title,
-        question: req.body.question,
-        options: req.body.options,
-        answer: req.body.answer,
+        sentence: req.body.sentence,
+        translate: req.body.translate,
       }
     );
 
-    res.json(lesson);
+    res.json({success: true});
   } catch (err) {
     throwError(res, err, 500, 'Не удалось обновить урок');
   }

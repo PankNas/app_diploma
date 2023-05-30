@@ -21,6 +21,11 @@ const LessonSchema = new mongoose.Schema({
     ref: 'ModuleLesson',
     required: true
   },
+  comments: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment',
+    required: true,
+  }],
 }, {
   timestamps: true
 });

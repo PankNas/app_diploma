@@ -1,7 +1,7 @@
-import CourseModel from "../models/Course.js";
-import {throwError} from "../utils/throwError.js";
-import ModuleLessonModel from '../models/Lessons/ModuleLesson.js';
-import TextLessonModel from "../models/Lessons/TextLesson.js";
+import CourseModel from "../../models/Course.js";
+import {throwError} from "../../utils/throwError.js";
+import ModuleLessonModel from '../../models/Lessons/ModuleLesson.js';
+import TextLessonModel from "../../models/Lessons/TextLesson.js";
 
 export const create = async (req, res) => {
   try {

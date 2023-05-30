@@ -24,6 +24,7 @@ export const getOne = async (req, res) => {
     )
       .populate('user')
       .populate({ path: 'modules', populate: { path: 'lessons' } })
+      .populate({ path: 'comments', populate: { path: 'user' } })
       .then(doc => {
         if (!doc) return throwError(res, 'error course', 404, 'Курс не найден!');
 
@@ -125,7 +126,7 @@ export const remove = async (req, res) => {
 
         await UserModel.updateMany(
           {},
-          {$pull: {teachCourses: courseId, studentCourses: courseId, progressCourses: courseId}},
+          {$pull: {teachCourses: courseId, studentCourses: courseId, progressCourses: courseId, reviewCourses: courseId}},
           {new: true}
         );
 

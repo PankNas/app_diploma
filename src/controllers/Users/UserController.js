@@ -3,11 +3,6 @@ import jwt from "jsonwebtoken";
 
 import UserModel from "../../models/Users/User.js";
 import {throwError} from "../../utils/throwError.js";
-import {registerMember, registerModerator, registerAdm} from "./registeration.js";
-import AccessCodeModel from "../../models/Users/AccessCode.js";
-import {findCodeAdm, findCodeModerator} from "./AccessCodeController.js";
-import MemberModel from "../../models/Users/Member.js";
-import CourseModel from "../../models/Course.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -73,22 +68,6 @@ export const login = async (req, res) => {
     if (!isValidPass)
       return throwError(res, '', 400, 'Неверные данные');
 
-    // const access = await AccessCodeModel.findOne();
-    //
-    // switch (user.role) {
-    //   case 'adm':
-    //     if (user.codeAccess !== access.codeAdm.code)
-    //       return throwError(res, '', 400, 'Неверные данные');
-    //     break;
-    //
-    //   case 'moderator':
-    //     const code = access.codesModerator.find(elem => elem.code === user.codeAccess);
-    //
-    //     if (!code)
-    //       return throwError(res, '', 400, 'Неверные данные');
-    //     break;
-    // }
-
     const token = jwt.sign(
       {_id: user._id,},
       'secret123',
@@ -126,7 +105,6 @@ export const getMe = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id, req.body);
 
     await UserModel.updateOne(
       {_id: id},
@@ -153,7 +131,7 @@ export const remove = async (req, res) => {
 
         // await CourseModel.updateMany(
         //   {},
-        //   {$pull: {teachCourses: courseId, studentCourses: courseId, progressCourses: courseId}},
+        //   {$pull: {user: userId}},
         //   {new: true}
         // );
 

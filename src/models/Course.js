@@ -35,6 +35,11 @@ const CourseSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  comments: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment',
+    required: true,
+  }],
   modules: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ModuleLesson',

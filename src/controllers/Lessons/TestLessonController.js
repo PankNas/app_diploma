@@ -1,18 +1,20 @@
-import {throwError} from "../utils/throwError.js";
+import {throwError} from "../../utils/throwError.js";
 import {createLesson} from "./LessonsController.js";
-import PassesLessonModel from "../models/Lessons/PassesLesson.js";
+import TestLessonModel from "../../models/Lessons/TestLesson.js";
 
 export const create = async (req, res) => {
   try {
-    const doc = new PassesLessonModel({
+    const doc = new TestLessonModel({
       type: req.body.type,
+      id: req.body.id,
       title: req.body.title,
-      sentence: req.body.sentence,
+      itemsTest: req.body.itemsTest,
+      totalScore: req.body.totalScore,
       course: req.body.course,
       module: req.body.module,
     });
 
-    const lesson = await createLesson(doc, PassesLessonModel);
+    const lesson = await createLesson(doc, TestLessonModel);
 
     res.json(lesson);
   } catch (err) {
@@ -24,11 +26,13 @@ export const update = async (req, res) => {
   try {
     const lessonId = req.params.id;
 
-    await PassesLessonModel.updateOne(
+    await TestLessonModel.updateOne(
       {_id: lessonId},
       {
+        id: req.body.id,
         title: req.body.title,
-        sentence: req.body.sentence,
+        itemsTest: req.body.itemsTest,
+        totalScore: req.body.totalScore,
       }
     );
 
