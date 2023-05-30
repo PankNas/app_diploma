@@ -17,6 +17,7 @@ export const create = async (req, res) => {
 
     const [model, id] = doc?.lesson ? [LessonModel, doc.lesson] : [CourseModel, doc.course];
     const obj = await model.findById(id).populate('comments');
+    console.log(comment, model, id);
 
     obj.comments.push(comment);
     await obj.save();
@@ -29,56 +30,46 @@ export const create = async (req, res) => {
 
 export const remove = async (req, res) => {
   try {
-    const courseId = req.params.id;
+    const commentId = req.params.id;
 
-    CourseModel.findOneAndDelete({_id: courseId})
+    CommentModel.findOneAndDelete({_id: commentId})
       .then(async doc => {
-        if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить курс');
+        if (!doc) return throwError(res, 'error', 500, 'Не удалось удалить комментарий');
 
-        await UserModel.updateMany(
+        await CourseModel.updateMany(
           {},
-          {$pull: {teachCourses: courseId, studentCourses: courseId, progressCourses: courseId, reviewCourses: courseId}},
+          {$pull: {comments: commentId}},
+          {new: true}
+        );
+
+        await LessonModel.updateMany(
+          {},
+          {$pull: {comments: commentId}},
           {new: true}
         );
 
         res.json({success: true});
       })
-      .catch(err => throwError(res, err, 500, 'Не удалось удалить курс'));
+      .catch(err => throwError(res, err, 500, 'Не удалось удалить комментарий'));
   } catch (err) {
-    throwError(res, err, 500, 'Не удалось получить курс');
+    throwError(res, err, 500, 'Не удалось получить комментарий');
   }
 };
 
 export const update = async (req, res) => {
   try {
-    const courseId = req.params.id;
-    console.log('courseId', courseId);
+    const commentId = req.params.id;
 
-    const course = await CourseModel.updateOne(
-      {_id: courseId},
+    await CommentModel.updateOne(
+      {_id: commentId},
       {
-        title: req.body?.title,
-        desc: req.body?.desc,
-        imageUrl: req.body?.imageUrl,
-        language: req.body?.language,
-        levelLanguage: req.body?.levelLanguage,
-        status: req.body?.status,
-        // countCheck: req.body?.countCheck,
+        dateTime: req.body.dateTime,
+        text: req.body.text,
       }
     );
 
-    if (course.status === 'check') {
-      const moderator = await UserModel.findOne({reviewCourses: courseId}).populate('reviewCourses');
-      moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
-      await moderator.save();
-
-      course.remarkForCourse = undefined;
-      course.remarks = [];
-      await course.save();
-    }
-
     res.json({success: true});
   } catch (err) {
-    throwError(res, err, 500, 'Не удалось обновить курс');
+    throwError(res, err, 500, 'Не удалось обновить комментарий');
   }
 };

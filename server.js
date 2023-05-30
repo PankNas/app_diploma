@@ -54,6 +54,13 @@ app.delete('/moderate/:id', checkAuth, handleValidationError, control.ModeratorC
 
 // comments
 app.post('/comments', checkAuth, handleValidationError, control.CommentController.create);
+app.delete('/comments/:id', checkAuth, handleValidationError, control.CommentController.remove);
+app.patch(
+  '/comments/:id',
+  checkAuth,
+  handleValidationError,
+  control.CommentController.update
+);
 
 // file
 app.post('/upload', upload.single('file'), (req, res) => {
