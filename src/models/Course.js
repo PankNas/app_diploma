@@ -52,14 +52,17 @@ const CourseSchema = new mongoose.Schema({
     ref: 'ModuleLesson',
     sparse: true
   }],
-  remarkForCourse: String,
-  remarks: [{
-    id: {
-      type: String,
-      // required: true,
-    },
-    text: String,
-  }]
+  remarkForCourse: [{
+    type: String,
+    default: new Array(2).fill('')
+  }],
+  // remarks: [{
+  //   id: {
+  //     type: String,
+  //     // required: true,
+  //   },
+  //   text: String,
+  // }]
 
 }, {
   timestamps: true,

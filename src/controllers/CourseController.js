@@ -2,7 +2,6 @@ import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 import UserModel from "../models/Users/User.js";
 import LessonModel from "../models/Lessons/Lesson.js";
-import {login} from "./Users/UserController.js";
 
 export const getAll = async (req, res) => {
   try {
@@ -24,8 +23,8 @@ export const getOne = async (req, res) => {
       {returnDocument: 'after'}
     )
       .populate('user reviewers')
-      .populate({ path: 'modules', populate: { path: 'lessons' } })
-      .populate({ path: 'comments', populate: { path: 'user' } })
+      .populate({path: 'modules', populate: {path: 'lessons'}})
+      .populate({path: 'comments', populate: {path: 'user'}})
       .then(doc => {
         if (!doc) return throwError(res, 'error course', 404, 'Курс не найден!');
 
@@ -127,7 +126,14 @@ export const remove = async (req, res) => {
 
         await UserModel.updateMany(
           {},
-          {$pull: {teachCourses: courseId, studentCourses: courseId, progressCourses: courseId, reviewCourses: courseId}},
+          {
+            $pull: {
+              teachCourses: courseId,
+              studentCourses: courseId,
+              progressCourses: courseId,
+              reviewCourses: courseId
+            }
+          },
           {new: true}
         );
 
@@ -143,7 +149,7 @@ export const update = async (req, res) => {
   try {
     const courseId = req.params.id;
 
-   await CourseModel.updateOne(
+    await CourseModel.updateOne(
       {_id: courseId},
       {
         title: req.body?.title,
@@ -156,29 +162,75 @@ export const update = async (req, res) => {
       }
     );
 
-    const course = await CourseModel.findById(courseId);
+    const course = await CourseModel.findById(courseId)
+      .populate({path: 'modules', populate: {path: 'lessons'}});
 
     if (course.status === 'check') {
       // const moderator = await UserModel.findOne({reviewCourses: courseId}).populate('reviewCourses');
       // moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
       // await moderator.save();
 
-      course.reviewers = course.reviewers.filter(item => item._id !== req.body.reviewer)
+      // course.reviewers = course.reviewers.filter(item => item._id !== req.body.reviewer)
 
-      course.remarkForCourse = undefined;
-      course.remarks = [];
+      if (req.body.delete) {
+        const moderator = await UserModel.find({reviewCourses: courseId});
+        console.log(moderator);
+        // moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
+        // await moderator.save();
+
+        course.remarkForCourse = new Array(2).fill('');
+
+        course.modules.forEach(module => {
+          module.lessons.forEach(async lesson => {
+            lesson.remarks = new Array(2).fill('');
+
+            await lesson.save();
+          });
+        });
+
+        course.countCheck = 0;
+        course.reviewers = [];
+
+        // course.lessons.forEach(async lesson => {
+        //   lesson.remarks = new Array(2).fill('');
+        //
+        //   await lesson.save();
+        // })
+      } else {
+        const index = course.reviewers.findIndex(item => item._id !== req.body.reviewer);
+
+        if (index !== -1) {
+          course.remarkForCourse.splice(index, 1);
+
+          course.modules.forEach(module => {
+            module.lessons.forEach(async lesson => {
+              lesson.remarks.splice(index, 1);
+
+              await lesson.save();
+            });
+          });
+
+          // course.lessons.forEach(async lesson => {
+          //   lesson.remarks.splice(index, 1);
+          //
+          //   await lesson.save();
+          // })
+        }
+      }
+
+      // course.remarks = [];
     }
 
     if (course.status === 'fail') {
-      const moderators = await UserModel.find({reviewCourses: courseId});
-
-      moderators.forEach(async moderator => {
-        moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
-        await moderator.save();
-      })
-
-      course.reviewers = [];
-      course.countCheck = 0;
+      // const moderators = await UserModel.find({reviewCourses: courseId});
+      //
+      // moderators.forEach(async moderator => {
+      //   moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
+      //   await moderator.save();
+      // });
+      //
+      // course.reviewers = [];
+      // course.countCheck = 0;
     }
 
     if (course.status === 'moderate') {
@@ -188,7 +240,7 @@ export const update = async (req, res) => {
     if (course.status === 'active') {
       course.countCheck += 1;
 
-      if (course.countCheck < 2) course.status = req.body.statusOld;
+      if (course.countCheck < 2) course.status = 'check';
     }
 
     // console.log(course);
@@ -206,8 +258,11 @@ export const addRemarkLesson = async (req, res) => {
     const courseId = req.params.id;
     const lessonId = req.params.lessonId;
 
+    const course = await CourseModel.findById(courseId).populate('reviewers');
+    const index = course.reviewers.findIndex(reviewer => reviewer._id.toString() === req.body.reviewer);
+
     const lesson = await LessonModel.findById(lessonId);
-    lesson.remarks = req.body.text;
+    lesson.remarks[index] = req.body.text;
     await lesson.save();
 
     // const course = await CourseModel.findById(courseId);
@@ -234,12 +289,21 @@ export const addRemarkCourse = async (req, res) => {
   try {
     const courseId = req.params.id;
 
-    await CourseModel.updateOne(
-      {_id: courseId},
-      {
-        remarkForCourse: req.body.remarkForCourse,
-      }
-    )
+    const course = await CourseModel.findById(courseId);
+    const index = course.reviewers.findIndex(reviewer => reviewer._id.toString() === req.body.reviewer);
+
+    if (index !== -1) {
+      course.remarkForCourse[index] = req.body.remarkForCourse;
+    }
+
+    await course.save();
+
+    // await CourseModel.updateOne(
+    //   {_id: courseId},
+    //   {
+    //     remarkForCourse: req.body.remarkForCourse,
+    //   }
+    // )
 
     res.json({success: true});
   } catch (err) {
@@ -256,7 +320,7 @@ export const removeRemarkCourse = async (req, res) => {
       {
         remarkForCourse: req.body.remarkForCourse,
       }
-    )
+    );
 
     res.json({success: true});
   } catch (err) {
@@ -273,7 +337,7 @@ export const removeRemarkLesson = async (req, res) => {
       {
         remarkForCourse: req.body.remarkForCourse,
       }
-    )
+    );
 
     res.json({success: true});
   } catch (err) {
