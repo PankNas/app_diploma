@@ -6,9 +6,16 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // countCheck: {
-  //   type: Number,
-  // },
+
+  reviewers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  countCheck: {
+    type: Number,
+    default: 0,
+  },
+
   title: {
     type: String,
     sparse: true

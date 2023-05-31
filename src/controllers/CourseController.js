@@ -2,10 +2,11 @@ import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 import UserModel from "../models/Users/User.js";
 import LessonModel from "../models/Lessons/Lesson.js";
+import {login} from "./Users/UserController.js";
 
 export const getAll = async (req, res) => {
   try {
-    const courses = await CourseModel.find().populate('user').exec();
+    const courses = await CourseModel.find().populate('user reviewers').exec();
 
     res.json(courses);
   } catch (err) {
@@ -22,7 +23,7 @@ export const getOne = async (req, res) => {
       // {$inc: {viewsCount: 1}},
       {returnDocument: 'after'}
     )
-      .populate('user')
+      .populate('user reviewers')
       .populate({ path: 'modules', populate: { path: 'lessons' } })
       .populate({ path: 'comments', populate: { path: 'user' } })
       .then(doc => {
@@ -141,9 +142,8 @@ export const remove = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const courseId = req.params.id;
-    console.log('courseId', courseId);
 
-    const course = await CourseModel.updateOne(
+   await CourseModel.updateOne(
       {_id: courseId},
       {
         title: req.body?.title,
@@ -156,15 +156,44 @@ export const update = async (req, res) => {
       }
     );
 
+    const course = await CourseModel.findById(courseId);
+
     if (course.status === 'check') {
-      const moderator = await UserModel.findOne({reviewCourses: courseId}).populate('reviewCourses');
-      moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
-      await moderator.save();
+      // const moderator = await UserModel.findOne({reviewCourses: courseId}).populate('reviewCourses');
+      // moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
+      // await moderator.save();
+
+      course.reviewers = course.reviewers.filter(item => item._id !== req.body.reviewer)
 
       course.remarkForCourse = undefined;
       course.remarks = [];
-      await course.save();
     }
+
+    if (course.status === 'fail') {
+      const moderators = await UserModel.find({reviewCourses: courseId});
+
+      moderators.forEach(async moderator => {
+        moderator.reviewCourses = moderator.reviewCourses.filter(course => course._id !== courseId);
+        await moderator.save();
+      })
+
+      course.reviewers = [];
+      course.countCheck = 0;
+    }
+
+    if (course.status === 'moderate') {
+      course.reviewers.push(req.body.reviewer);
+    }
+
+    if (course.status === 'active') {
+      course.countCheck += 1;
+
+      if (course.countCheck < 2) course.status = req.body.statusOld;
+    }
+
+    // console.log(course);
+
+    await course.save();
 
     res.json({success: true});
   } catch (err) {
