@@ -82,6 +82,8 @@ app.patch(
   control.CourseController.update
 );
 
+app.patch('/score/:id', checkAuth, control.CourseController.setScore);
+
 app.patch('/remarks/course/:id', checkAuth, handleValidationError, control.CourseController.addRemarkCourse);
 app.delete('/remarks/course/:id', checkAuth, handleValidationError, control.CourseController.removeRemarkCourse);
 app.patch(

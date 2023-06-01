@@ -2,6 +2,7 @@ import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 import UserModel from "../models/Users/User.js";
 import LessonModel from "../models/Lessons/Lesson.js";
+import {ObjectId} from "mongodb";
 
 export const getAll = async (req, res) => {
   try {
@@ -342,5 +343,29 @@ export const removeRemarkLesson = async (req, res) => {
     res.json({success: true});
   } catch (err) {
     throwError(res, err, 500, 'Не удалось обновить курс');
+  }
+};
+
+export const setScore = async (req, res) => {
+  try {
+
+    const course = await CourseModel.findById(req.params.id);
+
+    const index = course.scores.findIndex(score => score.user.toString() === req.userId.toString());
+
+    if (index === -1) {
+      course.scores.push({
+        score: req.body.score,
+        user: req.userId,
+      })
+    } else {
+      course.scores[index].score = req.body.score === course.scores[index].score ? 0 : req.body.score;
+    }
+
+    await course.save();
+
+    res.json(course);
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить рейтинг');
   }
 };

@@ -37,6 +37,18 @@ const CourseSchema = new mongoose.Schema({
     // default: '/uploads/backAvaCourse.jpg'
   },
 
+  scores: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      // required: true,
+    },
+    score: {
+      type: Number,
+      required: true,
+      default: 0,
+    }
+  }],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
