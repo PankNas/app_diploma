@@ -6,6 +6,9 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  statusOld: {
+    type: String,
+  },
 
   reviewers: [{
     type: mongoose.Schema.Types.ObjectId,

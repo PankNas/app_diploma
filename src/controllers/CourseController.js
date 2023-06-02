@@ -150,6 +150,8 @@ export const update = async (req, res) => {
   try {
     const courseId = req.params.id;
 
+    const courseOld = await CourseModel.findById(courseId);
+
     await CourseModel.updateOne(
       {_id: courseId},
       {
@@ -232,6 +234,13 @@ export const update = async (req, res) => {
       //
       // course.reviewers = [];
       // course.countCheck = 0;
+
+      course.countCheck += 1;
+
+      if (course.countCheck < 2) {
+        course.status = 'check';
+        course.statusOld = 'fail';
+      }
     }
 
     if (course.status === 'moderate') {
@@ -241,7 +250,13 @@ export const update = async (req, res) => {
     if (course.status === 'active') {
       course.countCheck += 1;
 
-      if (course.countCheck < 2) course.status = 'check';
+      if (course.countCheck < 2) {
+        course.status = 'check';
+        course.statusOld = 'active';
+      }
+      else if (course.statusOld === 'fail') {
+        course.status = 'fail';
+      }
     }
 
     // console.log(course);
@@ -359,7 +374,13 @@ export const setScore = async (req, res) => {
         user: req.userId,
       })
     } else {
-      course.scores[index].score = req.body.score === course.scores[index].score ? 0 : req.body.score;
+      if (req.body.score === course.scores[index].score) {
+        course.scores.splice(index, 1);
+      } else {
+        course.scores[index].score = req.body.score;
+      }
+
+      // course.scores[index].score = req.body.score === course.scores[index].score ? 0 : req.body.score;
     }
 
     await course.save();
