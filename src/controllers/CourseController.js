@@ -235,12 +235,12 @@ export const update = async (req, res) => {
       // course.reviewers = [];
       // course.countCheck = 0;
 
-      course.countCheck += 1;
-
-      if (course.countCheck < 2) {
-        course.status = 'check';
-        course.statusOld = 'fail';
-      }
+      // course.countCheck += 1;
+      //
+      // if (course.countCheck < 2) {
+      //   course.status = 'check';
+      //   course.statusOld = 'fail';
+      // }
     }
 
     if (course.status === 'moderate') {
@@ -252,11 +252,11 @@ export const update = async (req, res) => {
 
       if (course.countCheck < 2) {
         course.status = 'check';
-        course.statusOld = 'active';
+        // course.statusOld = 'active';
       }
-      else if (course.statusOld === 'fail') {
-        course.status = 'fail';
-      }
+      // else if (course.statusOld === 'fail') {
+      //   course.status = 'fail';
+      // }
     }
 
     // console.log(course);

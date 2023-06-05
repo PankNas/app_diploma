@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import UserModel from "../../models/Users/User.js";
+import CourseModel from '../../models/Course.js';
 import {throwError} from "../../utils/throwError.js";
 
 export const getAll = async (req, res) => {
@@ -134,6 +135,9 @@ export const remove = async (req, res) => {
         //   {$pull: {user: userId}},
         //   {new: true}
         // );
+
+        const p = await CourseModel.deleteMany({user: userId});
+        console.log(p);
 
         res.json({success: true});
       })

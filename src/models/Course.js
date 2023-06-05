@@ -87,6 +87,7 @@ const CourseSchema = new mongoose.Schema({
 CourseSchema.pre('findOneAndDelete', async function (next) {
   try {
     const courseId = this._id;
+    console.log(courseId);
     // Удаление курса из списка пользователей
     const users = await UserModel.find({ 'studentCourses.course': courseId });
 
