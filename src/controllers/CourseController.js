@@ -88,11 +88,12 @@ export const unsubscribe = async (req, res) => {
     const course = await CourseModel.findById(courseId);
     const user = await UserModel.findById(req.userId).populate('studentCourses');
 
-    const index = user.studentCourses.findIndex(item => item === course);
+    const index = user.studentCourses.findIndex(item => item._id.toString() === courseId.toString());
 
-    user.studentCourses.splice(index, 1);
-    user.progressCourses.splice(index, 1);
-    // user.studentCourses = user.studentCourses.filter(item => item._id !== courseId);
+    if (index !== -1) {
+      user.studentCourses.splice(index, 1);
+      user.progressCourses.splice(index, 1);
+    }
 
     await user.save();
 

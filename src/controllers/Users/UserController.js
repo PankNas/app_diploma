@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 import UserModel from "../../models/Users/User.js";
 import CourseModel from '../../models/Course.js';
+import CommentModel from '../../models/Comment.js';
 import {throwError} from "../../utils/throwError.js";
 
 export const getAll = async (req, res) => {
@@ -136,8 +137,31 @@ export const remove = async (req, res) => {
         //   {new: true}
         // );
 
-        const p = await CourseModel.deleteMany({user: userId});
-        console.log(p);
+        const courses = await CourseModel.find({user: userId})
+        const users = await UserModel.find();
+
+        const findCourse = (curCourse, coursesUser) => coursesUser.findIndex(course => course._id.toString() === curCourse._id.toString())
+
+        users.forEach(user => {
+          courses.forEach(async course => {
+            const index = findCourse(course, user.studentCourses);
+            console.log(user.email, index, course.title);
+
+            if (index !== -1) {
+              user.studentCourses.splice(index, 1);
+              user.progressCourses.splice(index, 1);
+
+              await user.save();
+            }
+          })
+
+          // user.studentCourses = user.studentCourses.filter(course => !findCourse(course))
+
+          // await user.save();
+        })
+
+        await CourseModel.deleteMany({user: userId});
+        await CommentModel.deleteMany({user: userId});
 
         res.json({success: true});
       })
