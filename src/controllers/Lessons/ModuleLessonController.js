@@ -7,6 +7,7 @@ export const create = async (req, res) => {
   try {
     const doc = new ModuleLessonModel({
       course: req.body.course,
+      title: '',
     });
 
     const module = await doc.save();

@@ -2,7 +2,7 @@ import CourseModel from "../models/Course.js";
 import {throwError} from "../utils/throwError.js";
 import UserModel from "../models/Users/User.js";
 import LessonModel from "../models/Lessons/Lesson.js";
-import {ObjectId} from "mongodb";
+import ModuleLessonModel from '../models/Lessons/ModuleLesson.js';
 
 export const getAll = async (req, res) => {
   try {
@@ -138,6 +138,8 @@ export const remove = async (req, res) => {
           },
           {new: true}
         );
+
+        await ModuleLessonModel.deleteMany({course: courseId});
 
         res.json({success: true});
       })
