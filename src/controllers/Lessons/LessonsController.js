@@ -23,6 +23,7 @@ export const getOne = async (req, res) => {
 
     LessonModel.findOne({_id: lessonId})
       .populate('module')
+      .populate({ path: 'course', populate: { path: 'user' } })
       .populate({ path: 'comments', populate: { path: 'user' } })
       .then(doc => {
         if (!doc) return throwError(res, 'error lessons', 404, 'Урок не найден!');

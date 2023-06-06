@@ -145,7 +145,7 @@ export const remove = async (req, res) => {
         users.forEach(user => {
           courses.forEach(async course => {
             const index = findCourse(course, user.studentCourses);
-            console.log(user.email, index, course.title);
+            // console.log(user.email, index, course.title);
 
             if (index !== -1) {
               user.studentCourses.splice(index, 1);
