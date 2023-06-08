@@ -123,6 +123,27 @@ export const update = async (req, res) => {
   }
 };
 
+export const updateMe = async (req, res) => {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const passHash = await bcrypt.hash(req.body.password, salt);
+
+    await UserModel.updateOne(
+      {_id: req.userId},
+      {
+        email: req.body.email,
+        fullName: req.body.fullName,
+        avatarUrl: req.body.avatarUrl,
+        passwordHash: passHash,
+      });
+
+    res.json({success: true});
+  } catch (err) {
+    throwError(res, err, 500, 'Не удалось обновить пользователя');
+  }
+};
+
+
 export const remove = async (req, res) => {
   try {
     const userId = req.params.id;

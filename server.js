@@ -47,6 +47,13 @@ app.patch(
 app.post('/auth/register', valid.registerValidation, handleValidationError, control.UserController.register);
 app.post('/auth/login', valid.loginValidation, handleValidationError, control.UserController.login);
 app.get('/auth/me', checkAuth, control.UserController.getMe);
+app.patch(
+  '/auth/me',
+  checkAuth,
+  valid.registerValidation,
+  handleValidationError,
+  control.UserController.updateMe
+);
 
 // moderator
 app.post('/moderate', checkAuth, handleValidationError, control.ModeratorController.add);
