@@ -23,7 +23,7 @@ export const courseValidation = [
 export const videoLessonValidation = [
   body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
   body('desc', 'Введите описание курса').optional().isString(),
-  body('videoUrl', 'Неверный url изображения').isString(),
+  body('videoUrl', 'Неверный url видео').isLength({min: 3}).isString(),
 ];
 
 export const textLessonValidation = [
@@ -40,4 +40,20 @@ export const sentenceLessonValidation = [
 export const passesLessonValidation = [
   body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
   body('sentence', 'Введите предложение для урока').isLength({min: 5}).isString(),
+];
+
+export const testLessonValidation = [
+  body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
+  body('itemsTest', 'Создайте пункты теста').isArray({min: 1}),
+
+  // body('itemsTest.question', 'Введите вопрос').isLength({min: 5}).isString(),
+  // body('itemsTest.options', 'Введите варианты ответов').isArray({min: 2}),
+  // body('itemsTest.answer', 'Введите вариант ответа').isNumeric(),
+];
+
+export const translateLessonValidation = [
+  body('title', 'Введите заголовок курса').isLength({min: 3}).isString(),
+  body('question', 'Введите вопрос').isLength({min: 5}).isString(),
+  body('options', 'Введите варианты ответов').isArray({min: 2}).isLength({min: 3}),
+  body('answer', 'Введите вариант ответа').isLength({min: 1}),
 ];

@@ -88,6 +88,13 @@ app.patch(
   handleValidationError,
   control.CourseController.update
 );
+app.patch(
+  '/courses/update/:id',
+  checkAuth,
+  // valid.courseValidation,
+  handleValidationError,
+  control.CourseController.update
+);
 
 app.patch('/score/:id', checkAuth, control.CourseController.setScore);
 
@@ -186,13 +193,13 @@ app.patch(
 app.post(
   '/lessons/test',
   checkAuth,
-  // valid.passesLessonValidation,
+  valid.testLessonValidation,
   handleValidationError,
   control.TestLessonController.create);
 app.patch(
   '/lessons/test/:id',
   checkAuth,
-  // valid.passesLessonValidation,
+  valid.testLessonValidation,
   handleValidationError,
   control.TestLessonController.update
 );
@@ -200,13 +207,13 @@ app.patch(
 app.post(
   '/lessons/translate',
   checkAuth,
-  // valid.passesLessonValidation,
+  valid.translateLessonValidation,
   handleValidationError,
   control.TranslateLessonController.create);
 app.patch(
   '/lessons/translate/:id',
   checkAuth,
-  // valid.passesLessonValidation,
+  valid.translateLessonValidation,
   handleValidationError,
   control.TranslateLessonController.update
 );
